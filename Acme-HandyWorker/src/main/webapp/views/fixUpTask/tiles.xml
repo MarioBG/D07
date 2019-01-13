@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 
+ * tiles.xml
+ *
+ * Copyright (C) 2018 Universidad de Sevilla
+ * 
+ * The use of this project is hereby constrained to the conditions of the 
+ * TDG Licence, a copy of which you may download from 
+ * http://www.tdg-seville.info/License.html
+ -->
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+       
+<tiles-definitions>
+	
+	<definition name="fixuptask/list" extends="master.page">	
+		<put-attribute name="title" value="FixUpTask List" />
+		<put-attribute name="body" value="/views/fixUpTask/list.jsp" />
+	</definition>
+	
+	<definition name="fixuptask/create" extends="master.page">	
+		<put-attribute name="title" value="Create" />
+		<put-attribute name="body" value="/views/fixUpTask/create.jsp" />
+	</definition>
+	
+	<definition name="fixuptasks/edit" extends="master.page">	
+		<put-attribute name="title" value="Edit" />
+		<put-attribute name="body" value="/views/fixUpTask/edit.jsp" />
+	</definition>
+	
+	<definition name="fixuptask/search" extends="master.page">	
+		<put-attribute name="title" value="Search" />
+		<put-attribute name="body" value="/views/fixUpTask/search.jsp" />
+	</definition>
+	
+	<definition name="fixuptask/filter" extends="master.page">	
+		<put-attribute name="title" value="Filter" />
+		<put-attribute name="body" value="/views/fixUpTask/filter.jsp" />
+	</definition>
+	
+</tiles-definitions>
