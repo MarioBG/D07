@@ -8,7 +8,26 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<form:form action="handyWorker/edit.do" modelAttribute="actor">
+<head>
+	<spring:message code="actor.confirmPhone" var="phoneConfirm"/>
+	<script>
+		$(document).ready(function() {
+		 $("#formID").submit(function(){
+			var m = document.getElementById("phone").value;
+			var expreg = /^(\+\d{1,3})?\s?(\(\d{3}\)\s)?\s?\d{4,100}$/;
+			
+			if(!expreg.test(m)){
+				
+				return confirm($('#phoneConfirm').val());
+			}
+		});
+		});
+	</script>
+</head>
+
+<input id="phoneConfirm" type="hidden" value="${phoneConfirm}"/>
+
+<form:form action="handyWorker/edit.do" id="formID" modelAttribute="handyWorker">
 	<form:hidden path="id" />
 	<form:hidden path="version" />
 	<form:hidden path="suspicious" />
@@ -30,14 +49,14 @@
 			<spring:message code="handyWorker.userAccount.username" />
 		</form:label>
 		<form:input class="form-control" path="userAccount.username" />
-		<form:errors class="text-danger" path="userAccount.username" />
+		<form:errors class="error" path="userAccount.username" />
 	</div>
 	<div class="form-group"> 
 		<form:label path="userAccount.password">
 			<spring:message code="handyWorker.userAccount.password" />
 		</form:label>
 		<form:password class="form-control" path="userAccount.password" />
-		<form:errors class="text-danger" path="userAccount.password" />
+		<form:errors class="error" path="userAccount.password" />
 	</div>
 
 	
@@ -83,7 +102,7 @@
 				<form:label path="phoneNumber">
 					<spring:message code="handyWorker.phoneNumber" />
 				</form:label>
-				<form:input placeholder="${actor.phoneNumber}" path="phoneNumber" />
+				<form:input placeholder="${actor.phoneNumber}" id="phone" path="phoneNumber" />
 				<form:errors class="error" path="phoneNumber" />
 			</div>
 		</div>

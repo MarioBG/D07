@@ -7,8 +7,25 @@
 <%@taglib prefix="security"
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
+<head>
+	<spring:message code="actor.confirmPhone" var="phoneConfirm"/>
+	<script>
+		$(document).ready(function() {
+		 $("#formID").submit(function(){
+			var m = document.getElementById("phone").value;
+			var expreg = /^(\+\d{1,3})?\s?(\(\d{3}\)\s)?\s?\d{4,100}$/;
+			
+			if(!expreg.test(m)){
+				
+				return confirm($('#phoneConfirm').val());
+			}
+		});
+		});
+	</script>
+</head>
 
-<form:form action="handyWorker/modify.do" modelAttribute="actor">
+<input id="phoneConfirm" type="hidden" value="${phoneConfirm}"/>
+<form:form action="handyWorker/modify.do" modelAttribute="handyWorker" id="formID">
 	<form:hidden path="id" />
 	<form:hidden path="version" />
 	<form:hidden path="suspicious" />
@@ -30,7 +47,7 @@
 				<form:label path="name">
 					<spring:message code="handyWorker.name" />
 				</form:label>
-				<form:input placeholder="${actor.name}" path="name" />
+				<form:input placeholder="${handyWorker.name}" path="name" />
 				<form:errors class="error" path="name" />
 			</div>
 			<!-- MiddleName -->
@@ -38,7 +55,7 @@
 				<form:label path="middleName">
 					<spring:message code="handyWorker.middleName" />
 				</form:label>
-				<form:input placeholder="${actor.middleName}" path="middleName" />
+				<form:input placeholder="${handyWorker.middleName}" path="middleName" />
 				<form:errors class="error" path="middleName" />
 			</div>
 			<!-- Surname -->
@@ -46,25 +63,25 @@
 				<form:label path="surname">
 					<spring:message code="handyWorker.surname" />
 				</form:label>
-				<form:input placeholder="${actor.surname}" path="surname" />
+				<form:input placeholder="${handyWorker.surname}" path="surname" />
 				<form:errors class="error" path="surname" />
 			</div>
 		</div>
 		<div class="fields">
-			<!-- Password -->
+<%-- 			<!-- Password -->
 			<div class="field">
 				<form:label path="userAccount.password">
 					<spring:message code="handyWorker.password" />
 				</form:label>
 				<form:input  path="userAccount.password" />
 				<form:errors class="error" path="userAccount.password" />
-			</div>
+			</div> --%>
 			<!-- Make -->
 			<div class="field">
 				<form:label path="make">
 					<spring:message code="handyWorker.make" />
 				</form:label>
-				<form:input placeholder="${actor.make}" path="make" />
+				<form:input placeholder="${handyWorker.make}" path="make" />
 				<form:errors class="error" path="make" />
 			</div>
 		</div>
@@ -74,7 +91,7 @@
 				<form:label path="email">
 					<spring:message code="handyWorker.email" />
 				</form:label>
-				<form:input placeholder="${actor.email}" path="email" />
+				<form:input placeholder="${handyWorker.email}" path="email" />
 				<form:errors class="error" path="email" />
 			</div>
 			<!-- Phone Number -->
@@ -82,7 +99,7 @@
 				<form:label path="phoneNumber">
 					<spring:message code="handyWorker.phoneNumber" />
 				</form:label>
-				<form:input placeholder="${actor.phoneNumber}" path="phoneNumber" />
+				<form:input placeholder="${handyWorker.phoneNumber}" id="phone" path="phoneNumber" />
 				<form:errors class="error" path="phoneNumber" />
 			</div>
 		</div>
@@ -92,7 +109,7 @@
 				<form:label path="address">
 					<spring:message code="handyWorker.address" />
 				</form:label>
-				<form:input placeholder="${actor.address}" path="address" />
+				<form:input placeholder="${handyWorker.address}" path="address" />
 				<form:errors class="error" path="address" />
 			</div>
 			<!-- Photo -->
@@ -100,13 +117,13 @@
 				<form:label path="photo">
 					<spring:message code="handyWorker.photo" />
 				</form:label>
-				<form:input placeholder="${actor.photo}" path="photo" />
+				<form:input placeholder="${handyWorker.photo}" path="photo" />
 				<form:errors class="error" path="photo" />
 			</div>
 		</div>
 	</div>
 
-	<jstl:if test="${enabled==true }">
+	<jstl:if test="${handyWorker.userAccount.enabled==true }">
 		<input type="submit" class="ui primary button" name="save"
 			value="<spring:message code="handyWorker.save" />">
 	</jstl:if>

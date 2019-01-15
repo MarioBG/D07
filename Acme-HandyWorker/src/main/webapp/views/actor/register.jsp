@@ -20,14 +20,14 @@
 			<spring:message code="actor.userAccount.username" />
 		</form:label>
 		<form:input class="form-control" path="userAccount.username" />
-		<form:errors class="text-danger" path="userAccount.username" />
+		<form:errors class="error" path="userAccount.username" />
 	</div>
 	<div class="form-group"> 
 		<form:label path="userAccount.password">
 			<spring:message code="actor.userAccount.password" />
 		</form:label>
 		<form:password class="form-control" path="userAccount.password" />
-		<form:errors class="text-danger" path="userAccount.password" />
+		<form:errors class="error" path="userAccount.password" />
 	</div>
 
 	<hr />
@@ -37,13 +37,13 @@
 			<spring:message code="actor.name" />
 		</form:label>
 		<form:input class="form-control" path="name" />
-		<form:errors class="text-danger" path="name" />
+		<form:errors class="error" path="name" />
 	</div>
 	<div class="form-group"> 
 		<form:label path="middleName">
 			<spring:message code="actor.middleName" />
 		</form:label>
 		<form:input class="form-control" path="middleName" />
-		<form:errors class="text-danger" path="middleName" />
+		<form:errors class="error" path="middleName" />
 	</div>
 </form:form>

@@ -14,11 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import domain.Actor;
-import domain.Configuration;
 import repositories.ActorRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Actor;
+import domain.Configuration;
 
 @Service
 @Transactional
@@ -27,11 +27,12 @@ public class ActorService {
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	private ActorRepository actorRepository;
+	private ActorRepository			actorRepository;
 	@Autowired
-	private ConfigurationService configurationService;
+	private ConfigurationService	configurationService;
 	@PersistenceContext
-	EntityManager manager;
+	EntityManager					manager;
+
 
 	// Supporting services ----------------------------------------------------
 
@@ -84,8 +85,8 @@ public class ActorService {
 		return actor;
 	}
 
-	public Collection<String> findAllUsername(int adminId) {
-		return actorRepository.findAllUsername(adminId);
+	public Collection<String> findAllUsername(final int adminId) {
+		return this.actorRepository.findAllUsername(adminId);
 	}
 
 	public Collection<Actor> findAll() {
@@ -98,152 +99,139 @@ public class ActorService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Collection<Actor> findByUsernames(Collection<String> usernames) {
+	public Collection<Actor> findByUsernames(final Collection<String> usernames) {
 		Assert.notNull(usernames);
-		List<String> transformed = new LinkedList<String>();
+		final List<String> transformed = new LinkedList<String>();
 
-		for (String e : usernames) {
-			if (e != null) {
+		for (final String e : usernames)
+			if (e != null)
 				transformed.add(String.format("'%s'", e));
-			}
-		}
 
-		if (transformed.isEmpty()) {
+		if (transformed.isEmpty())
 			return new LinkedList<Actor>();
-		}
 
-		StringBuilder queryParam = new StringBuilder(transformed.toString());
+		final StringBuilder queryParam = new StringBuilder(transformed.toString());
 		queryParam.deleteCharAt(0);
 		queryParam.deleteCharAt(queryParam.length() - 1);
 
-		Query query = manager
-				.createQuery(String.format("select c from Actor c where c.userAccount.username in (%s)", queryParam));
+		final Query query = this.manager.createQuery(String.format("select c from Actor c where c.userAccount.username in (%s)", queryParam));
 
 		return query.getResultList();
 	}
 
 	public Actor findSelf() {
-		UserAccount account = LoginService.getPrincipal();
+		final UserAccount account = LoginService.getPrincipal();
 		Assert.notNull(account);
 
-		return actorRepository.findSelf(account.getUsername());
+		return this.actorRepository.findSelf(account.getUsername());
 	}
 
 	public Collection<Actor> findSuspiciousActor() {
-		return actorRepository.findSuspiciousActor();
+		return this.actorRepository.findSuspiciousActor();
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean isSuspicious(Actor handyWorker) {
+	public boolean isSuspicious(final Actor handyWorker) {
 		Assert.notNull(handyWorker);
 		Assert.isTrue(handyWorker.getId() != 0);
-		
-		Query query = manager.createQuery("select m.body from Actor c join c.boxes b join b.messages m where c.id = :id");
+
+		final Query query = this.manager.createQuery("select m.body from Actor c join c.boxes b join b.messages m where c.id = :id");
 		query.setParameter("id", handyWorker.getId());
-		
-		List<String> bodies = query.getResultList();
+
+		final List<String> bodies = query.getResultList();
 		Assert.notNull(bodies);
-		
-		Configuration configuration = configurationService.findAll().get(0);
+
+		final Configuration configuration = this.configurationService.findAll().get(0);
 		Assert.notNull(configuration);
-		
-		for(String e : configuration.getSpamWords()) {
-			for(String b : bodies) {
-				if(b.toLowerCase().contains(e.toLowerCase())) {
+
+		for (final String e : configuration.getSpamWords())
+			for (final String b : bodies)
+				if (b.toLowerCase().contains(e.toLowerCase())) {
 					handyWorker.setSuspicious(true);
-					actorRepository.save(handyWorker);
+					this.actorRepository.save(handyWorker);
 					return true;
 				}
-			}
-		}
-		
+
 		return false;
 	}
-	
-	public Actor findByUserAccount(UserAccount userAccount) {
+
+	public Actor findByUserAccount(final UserAccount userAccount) {
 		Assert.notNull(userAccount);
 		Assert.isTrue(userAccount.getId() != 0);
-		Actor res = actorRepository.findByUserAccountId(userAccount.getId());
+		final Actor res = this.actorRepository.findByUserAccountId(userAccount.getId());
 		return res;
 	}
-	
-	public Collection<Actor>  findAllSuspisiousActors() {
-		Collection<Actor> res = actorRepository.findAllSuspisiousActors();
+
+	public Collection<Actor> findAllSuspisiousActors() {
+		final Collection<Actor> res = this.actorRepository.findAllSuspisiousActors();
 		Assert.notNull(res);
 		return res;
-		
-	}
-	
-	public Collection<Actor>  findAllSuspisiousActors() {
-		Collection<Actor> res = actorRepository.findAllSuspisiousActors();
-		Assert.notNull(res);
-		return res;
-		
+
 	}
 
 	public Collection<Actor> findAllUnbannedActors() {
-		Collection<Actor> res = actorRepository.findAllUnbannedActors();
+		final Collection<Actor> res = this.actorRepository.findAllUnbannedActors();
 		Assert.notNull(res);
 		return res;
 	}
-	
+
 	public Collection<Actor> findAllBannedActors() {
-		Collection<Actor> res = actorRepository.findAllBannedActors();
+		final Collection<Actor> res = this.actorRepository.findAllBannedActors();
 		Assert.notNull(res);
 		return res;
 	}
-	
-	public Actor ban(int actorId){
-		Actor res = actorRepository.findOne(actorId);
+
+	public Actor ban(final int actorId) {
+		final Actor res = this.actorRepository.findOne(actorId);
 		UserAccount useraccount;
-		
+
 		Assert.isTrue(res.isSuspicious());
 		useraccount = res.getUserAccount();
 		Assert.isTrue(useraccount.isEnabled());
 		useraccount.setEnabled(false);
-		
+
 		res.setUserAccount(useraccount);
-		
+
 		return res;
-		
+
 	}
-	
-	public Actor unban(int actorId){
-		Actor res = actorRepository.findOne(actorId);
+
+	public Actor unban(final int actorId) {
+		final Actor res = this.actorRepository.findOne(actorId);
 		UserAccount useraccount;
-		
+
 		useraccount = res.getUserAccount();
 		Assert.isTrue(!useraccount.isEnabled());
 		useraccount.setEnabled(true);
-		
-		res.setUserAccount(useraccount);
-		
-		return res;
-		
-	}
-	
-//	public Actor create() {
-//
-//		Actor result;
-//		UserAccount userAccount;
-//
-//		result = new Actor() {};
-//		userAccount = new UserAccount();
-//
-//		result.setSuspicious(false);
-//
-//		userAccount.setEnabled(true);
-//
-//		Collection<Box> boxes = new LinkedList<>();
-//		result.setBoxes(boxes);
-//		Collection<SocialIdentity> socialIdentity = new LinkedList<>();
-//		result.setSocialIdentity(socialIdentity);
-//		result.setUserAccount(userAccount);
-//
-//		return result;
-//
-//	}
 
-//		HandyWorker res = handyWorkerService.save(handyWorker);
+		res.setUserAccount(useraccount);
+
+		return res;
+
+	}
+
+	//	public Actor create() {
+	//
+	//		Actor result;
+	//		UserAccount userAccount;
+	//
+	//		result = new Actor() {};
+	//		userAccount = new UserAccount();
+	//
+	//		result.setSuspicious(false);
+	//
+	//		userAccount.setEnabled(true);
+	//
+	//		Collection<Box> boxes = new LinkedList<>();
+	//		result.setBoxes(boxes);
+	//		Collection<SocialIdentity> socialIdentity = new LinkedList<>();
+	//		result.setSocialIdentity(socialIdentity);
+	//		result.setUserAccount(userAccount);
+	//
+	//		return result;
+	//
+	//	}
+
+	//		HandyWorker res = handyWorkerService.save(handyWorker);
 
 }

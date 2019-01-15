@@ -60,6 +60,7 @@ public abstract class Actor extends DomainEntity {
 
 	//@Pattern(regexp = "^[a-A-Z0-9]+@[a-zA-Z09.]*|[a-zA-Z0-9]+<[a-zA-Z0-9]+@[a-zA-Z0-9.]*>$")
 	@Email
+	@NotBlank
 	public String getEmail() {
 		return this.email;
 	}
