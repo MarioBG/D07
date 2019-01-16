@@ -44,6 +44,9 @@ public class AdministratorController extends AbstractController {
 	private AdministratorService	administratorservice;
 
 	@Autowired
+	private ActorService			actorService;
+
+	@Autowired
 	private CustomerService			customerService;
 
 	@Autowired
@@ -102,49 +105,49 @@ public class AdministratorController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid Administrator administrator, BindingResult binding) {
+	public ModelAndView save(@Valid final Administrator administrator, final BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(administrator);
-			for (ObjectError e : binding.getAllErrors())
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
 				this.administratorservice.save(administrator);
 				result = new ModelAndView("redirect:/welcome/index.do");
-			} catch (Throwable oops) {
+			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(administrator, "administrator.commit.error");
 			}
 		return result;
 	}
 
 	@RequestMapping(value = "/editReferee", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid Referee referee, BindingResult binding) {
+	public ModelAndView save(@Valid final Referee referee, final BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(referee);
-			for (ObjectError e : binding.getAllErrors())
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
 				this.administratorservice.saveReferee(referee);
 				result = new ModelAndView("redirect:/welcome/index.do");
-			} catch (Throwable oops) {
+			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(referee, "referee.commit.error");
 			}
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Administrator administrator) {
+	protected ModelAndView createEditModelAndView(final Administrator administrator) {
 		ModelAndView result;
 
 		result = this.createEditModelAndView(administrator, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Administrator administrator, String messageCode) {
+	protected ModelAndView createEditModelAndView(final Administrator administrator, final String messageCode) {
 		ModelAndView result;
 
 		if (administrator.getId() > 0)
@@ -152,20 +155,20 @@ public class AdministratorController extends AbstractController {
 		else
 			result = new ModelAndView("administrator/registerAdministrator");
 
-		result.addObject("actor", administrator);
+		result.addObject("administrator", administrator);
 		result.addObject("message", messageCode);
 
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Referee referee) {
+	protected ModelAndView createEditModelAndView(final Referee referee) {
 		ModelAndView result;
 
 		result = this.createEditModelAndView(referee, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Referee referee, String messageCode) {
+	protected ModelAndView createEditModelAndView(final Referee referee, final String messageCode) {
 		ModelAndView result;
 
 		result = new ModelAndView("administrator/registerReferee");
@@ -180,7 +183,7 @@ public class AdministratorController extends AbstractController {
 	public ModelAndView registerAdmin() {
 
 		ModelAndView result;
-		Administrator actor = this.administratorservice.create();
+		final Administrator actor = this.administratorservice.create();
 
 		result = new ModelAndView("administrator/registerAdministrator");
 		result.addObject("actor", actor);
@@ -192,7 +195,7 @@ public class AdministratorController extends AbstractController {
 	public ModelAndView registerReferee() {
 
 		ModelAndView result;
-		Referee actor = this.refereeService.create();
+		final Referee actor = this.refereeService.create();
 
 		result = new ModelAndView("administrator/registerReferee");
 		result.addObject("actor", actor);
@@ -255,5 +258,67 @@ public class AdministratorController extends AbstractController {
 		result.addObject("handyWorkersByComplaints", handyWorkersByComplaints);
 
 		return result;
+	}
+
+	// List suspicious actors
+	@RequestMapping(value = "/listSuspicious", method = RequestMethod.GET)
+	public ModelAndView listSuspicious() {
+		ModelAndView res;
+		Collection<Actor> actors;
+
+		actors = this.administratorservice.findSuspiciousActor();
+
+		res = new ModelAndView("administrator/listSuspicious");
+		res.addObject("actors", actors);
+		res.addObject("requestURI", "administrator/listSuspicious.do");
+
+		return res;
+	}
+
+	// List banned actors
+	@RequestMapping(value = "/listBanned", method = RequestMethod.GET)
+	public ModelAndView listBanned() {
+		ModelAndView res;
+		Collection<Actor> actors;
+
+		actors = this.actorService.findAllBannedActors();
+
+		res = new ModelAndView("administrator/listBanned");
+		res.addObject("bannedactors", actors);
+		res.addObject("requestURI", "administrator/listBanned.do");
+
+		return res;
+	}
+
+	// Ban an actor
+	@RequestMapping(value = "/ban", method = RequestMethod.GET)
+	public ModelAndView ban(@RequestParam final int actorId) {
+		ModelAndView res;
+		Actor a;
+
+		a = this.actorService.ban(actorId);
+
+		res = new ModelAndView("administrator/listBanned");
+		res.addObject("bannedactors", a);
+		res.addObject("requestURI", "administrator/listBanned");
+
+		return res;
+
+	}
+
+	// Unban actor
+	@RequestMapping(value = "/unban", method = RequestMethod.GET)
+	public ModelAndView unban(@RequestParam final int actorId) {
+		ModelAndView res;
+		Actor a;
+
+		a = this.actorService.unban(actorId);
+
+		res = new ModelAndView("administrator/listSuspicious");
+		res.addObject("actors", a);
+		res.addObject("requestURI", "administrator/listSuspicious");
+
+		return res;
+
 	}
 }

@@ -19,23 +19,29 @@
 		<!-- Ticker -->
 		<form:hidden path="ticker" />
 		<!-- Moment -->
+		<p>
 		<form:label path="moment">
 			<spring:message code="complaint.moment" />
 		</form:label>
 		<form:input path="moment" />
 		<form:errors path="moment" />
+		</p>
 		<!-- Description -->
+		<p>
 		<form:label path="description">
 			<spring:message code="complaint.description" />
 		</form:label>
 		<form:textarea path="description" />
 		<form:errors path="description" />
+		</p>
 		<!-- Attachments -->
+		<p>
 		<form:label path="attachments">
 			<spring:message code="complaint.attachments" />
 		</form:label>
 		<form:textarea path="attachments" />
-		<form:errors path="attachments" />
+		<form:errors path="attachments" cssClass="error" />
+		</p>
 		<!-- Report -->
 		<form:hidden path="report" />
 		<input type="submit" class="btn btn-danger" name="save"

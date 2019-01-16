@@ -43,14 +43,14 @@ public class CustomerController extends AbstractController {
 	// Action-1 ---------------------------------------------------------------		
 
 	@RequestMapping("/viewProfile")
-	public ModelAndView view(@RequestParam(required = false) Integer customerId) {
+	public ModelAndView view(@RequestParam(required = false) final Integer customerId) {
 		ModelAndView result;
 
 		result = new ModelAndView("customer/viewProfile");
 		if (customerId == null)
 			result.addObject("actor", this.customerService.findByPrincipal());
 		else {
-			Customer target = this.customerService.findOne(customerId);
+			final Customer target = this.customerService.findOne(customerId);
 			result.addObject("actor", target);
 		}
 
@@ -80,31 +80,31 @@ public class CustomerController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid Customer customer, BindingResult binding) {
+	public ModelAndView save(@Valid final Customer customer, final BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(customer);
-			for (ObjectError e : binding.getAllErrors())
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
 				this.customerService.save(customer);
 				result = new ModelAndView("redirect:/welcome/index.do");
-			} catch (Throwable oops) {
+			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(customer, "customer.commit.error");
 			}
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Customer customer) {
+	protected ModelAndView createEditModelAndView(final Customer customer) {
 		ModelAndView result;
 
 		result = this.createEditModelAndView(customer, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(Customer customer, String messageCode) {
+	protected ModelAndView createEditModelAndView(final Customer customer, final String messageCode) {
 		ModelAndView result;
 
 		if (customer.getId() > 0)
@@ -112,7 +112,7 @@ public class CustomerController extends AbstractController {
 		else
 			result = new ModelAndView("customer/register");
 
-		result.addObject("actor", customer);
+		result.addObject("customer", customer);
 		result.addObject("message", messageCode);
 
 		return result;
@@ -122,10 +122,10 @@ public class CustomerController extends AbstractController {
 	public ModelAndView register() {
 
 		ModelAndView result;
-		Customer actor = this.customerService.create();
+		final Customer actor = this.customerService.create();
 
 		result = new ModelAndView("customer/register");
-		result.addObject("actor", actor);
+		result.addObject("customer", actor);
 
 		return result;
 	}

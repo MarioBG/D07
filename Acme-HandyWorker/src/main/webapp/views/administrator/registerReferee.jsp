@@ -8,7 +8,26 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<form:form action="administrator/editReferee.do" modelAttribute="actor">
+<head>
+	<spring:message code="actor.confirmPhone" var="phoneConfirm"/>
+	<script>
+		$(document).ready(function() {
+		 $("#formID").submit(function(){
+			var m = document.getElementById("phone").value;
+			var expreg = /^(\+\d{1,3})?\s?(\(\d{3}\)\s)?\s?\d{4,100}$/;
+			
+			if(!expreg.test(m)){
+				
+				return confirm($('#phoneConfirm').val());
+			}
+		});
+		});
+	</script>
+</head>
+
+<input id="phoneConfirm" type="hidden" value="${phoneConfirm}"/>
+
+<form:form action="administrator/editReferee.do" id="formID" modelAttribute="referee">
 	<form:hidden path="id" />
 	<form:hidden path="version" />
 	<form:hidden path="suspicious" />
@@ -75,7 +94,7 @@
 		<form:label path="phoneNumber">
 			<spring:message code="referee.phoneNumber" />
 		</form:label>
-		<form:input class="form-control" path="phoneNumber" />
+		<form:input class="form-control" path="phoneNumber" id="phone"/>
 		<form:errors class="text-danger" path="phoneNumber" />
 	</div>
 	<div class="form-group"> 

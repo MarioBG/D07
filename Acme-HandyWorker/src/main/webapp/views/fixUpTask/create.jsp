@@ -11,7 +11,7 @@
 
 <jstl:set value="<%=LocaleContextHolder.getLocale()%>" var="locale"></jstl:set>
 
-	<form:form action="fixuptask/edit.do" modelAttribute="fixuptask">
+	<form:form action="fixuptask/edit.do" modelAttribute="fixUpTask">
 		<form:hidden path="id"/>
 		<form:hidden path="version"/>
 		<form:hidden path="publicationMoment"/>

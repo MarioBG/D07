@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.HandyWorker;
 import services.HandyWorkerService;
+import domain.HandyWorker;
 
 @Controller
 @RequestMapping("/handyWorker")
@@ -24,20 +24,21 @@ public class HandyWorkerController extends AbstractController {
 	@Autowired
 	private HandyWorkerService	handyWorkerService;
 
+
 	public HandyWorkerController() {
 		super();
 	}
 
 	@RequestMapping("/viewProfile")
-	public ModelAndView view(@RequestParam(required = false) Integer handyWorkerId) {
+	public ModelAndView view(@RequestParam(required = false) final Integer handyWorkerId) {
 		ModelAndView result;
 
 		result = new ModelAndView("handyWorker/viewProfile");
 		if (handyWorkerId == null)
-			result.addObject("actor", this.handyWorkerService.findByPrincipal());
+			result.addObject("handyWorker", this.handyWorkerService.findByPrincipal());
 		else {
-			HandyWorker target = this.handyWorkerService.findOne(handyWorkerId);
-			result.addObject("actor", target);
+			final HandyWorker target = this.handyWorkerService.findOne(handyWorkerId);
+			result.addObject("handyWorker", target);
 		}
 
 		return result;
@@ -66,31 +67,31 @@ public class HandyWorkerController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid HandyWorker handyWorker, BindingResult binding) {
+	public ModelAndView save(@Valid final HandyWorker handyWorker, final BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(handyWorker);
-			for (ObjectError e : binding.getAllErrors())
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
 				this.handyWorkerService.save(handyWorker);
 				result = new ModelAndView("redirect:/welcome/index.do");
-			} catch (Throwable oops) {
+			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(handyWorker, "handyWorker.commit.error");
 			}
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(HandyWorker handyWorker) {
+	protected ModelAndView createEditModelAndView(final HandyWorker handyWorker) {
 		ModelAndView result;
 
 		result = this.createEditModelAndView(handyWorker, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(HandyWorker handyWorker, String messageCode) {
+	protected ModelAndView createEditModelAndView(final HandyWorker handyWorker, final String messageCode) {
 		ModelAndView result;
 
 		if (handyWorker.getId() > 0)
@@ -98,7 +99,7 @@ public class HandyWorkerController extends AbstractController {
 		else
 			result = new ModelAndView("handyWorker/register");
 
-		result.addObject("actor", handyWorker);
+		result.addObject("handyWorker", handyWorker);
 		result.addObject("message", messageCode);
 
 		return result;
@@ -108,31 +109,31 @@ public class HandyWorkerController extends AbstractController {
 	public ModelAndView register() {
 
 		ModelAndView result;
-		HandyWorker actor = this.handyWorkerService.create();
+		final HandyWorker actor = this.handyWorkerService.create();
 
 		result = new ModelAndView("handyWorker/register");
-		result.addObject("actor", actor);
+		result.addObject("handyWorker", actor);
 
 		return result;
 	}
 
-//	@RequestMapping(value = "/finder", method = RequestMethod.GET)
-//	public ModelAndView finder(
-//			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-//			@RequestParam(value = "startDate", required = false) String startDate,
-//			@RequestParam(value = "endDate", required = false) String endDate,
-//			@RequestParam(value = "maxPrice", required = false, defaultValue = "-1") double maxPrice) {
-//
-//		ModelAndView result;
-//
-//		result = new ModelAndView("handyWorker/finder");
-//		try {
-//			result.addObject("result", this.handyWorkerService.filter(keyword, startDate, endDate, maxPrice));
-//		} catch (ParseException e) {
-//			result.addObject("result", Arrays.asList());
-//		}
-//
-//		return result;
-//	}
+	//	@RequestMapping(value = "/finder", method = RequestMethod.GET)
+	//	public ModelAndView finder(
+	//			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+	//			@RequestParam(value = "startDate", required = false) String startDate,
+	//			@RequestParam(value = "endDate", required = false) String endDate,
+	//			@RequestParam(value = "maxPrice", required = false, defaultValue = "-1") double maxPrice) {
+	//
+	//		ModelAndView result;
+	//
+	//		result = new ModelAndView("handyWorker/finder");
+	//		try {
+	//			result.addObject("result", this.handyWorkerService.filter(keyword, startDate, endDate, maxPrice));
+	//		} catch (ParseException e) {
+	//			result.addObject("result", Arrays.asList());
+	//		}
+	//
+	//		return result;
+	//	}
 
 }
