@@ -25,7 +25,7 @@
 </head>
 
 <input id="phoneConfirm" type="hidden" value="${phoneConfirm}"/>
-<form:form action="handyWorker/modify.do" modelAttribute="handyWorker" id="formID">
+<form:form action="handyWorker/edit.do" modelAttribute="handyWorker" id="formID">
 	<form:hidden path="id" />
 	<form:hidden path="version" />
 	<form:hidden path="suspicious" />
