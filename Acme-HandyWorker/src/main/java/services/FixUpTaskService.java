@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import repositories.FixUpTaskRepository;
 import domain.Application;
 import domain.Category;
 import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.Phase;
+import repositories.FixUpTaskRepository;
 
 @Service
 @Transactional
@@ -27,16 +27,15 @@ public class FixUpTaskService {
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	private FixUpTaskRepository	fixUpTaskRepository;
+	private FixUpTaskRepository fixUpTaskRepository;
 
 	// Supporting services ----------------------------------------------------
 
 	@Autowired
-	private CustomerService		customerService;
-	
+	private CustomerService customerService;
+
 	@Autowired
 	private ApplicationService applicationService;
-
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -82,11 +81,13 @@ public class FixUpTaskService {
 	public void delete(FixUpTask entity) {
 		this.fixUpTaskRepository.delete(entity);
 	}
-	
+
 	public void deleteFixUpTask(FixUpTask entity) {
 		Collection<Application> applications = entity.getApplications();
-		for(Application a:applications) {
-			applicationService.delete(a);
+		for (Application a : applications) {
+			if (a.getStatus().equals("ACCEPTED"))
+				break;
+			this.applicationService.delete(a);
 		}
 		this.fixUpTaskRepository.delete(entity);
 	}
@@ -131,9 +132,8 @@ public class FixUpTaskService {
 	}
 
 	public String generateAlphanumeric() {
-		final Character[] letras = {
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-		};
+		final Character[] letras = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+				'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 		final Random rand = new Random();
 		String alpha = "";
 		for (int i = 0; i < 6; i++)
@@ -162,17 +162,16 @@ public class FixUpTaskService {
 	public FixUpTask findForComplaint(Complaint c) {
 		return this.fixUpTaskRepository.findForComplaintId(c.getId());
 	}
-	
+
 	public Boolean canBeDeleted(FixUpTask fixuptask) {
 		Assert.notNull(fixuptask);
 		Boolean res = true;
 		Collection<Application> applications = fixuptask.getApplications();
-		for(Application a:applications) {
-			if(a.getStatus()=="ACCEPTED") {
+		for (Application a : applications)
+			if (a.getStatus() == "ACCEPTED") {
 				res = false;
 				break;
 			}
-		}
 		return res;
 	}
 }

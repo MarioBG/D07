@@ -160,7 +160,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<jstl:forEach var="e" items="${fixuptask.applications}">
+				<jstl:forEach var="e" items="${fixUpTask.applications}">
 					<tr>
 						<td data-label="${aplication_handyWorker}">${e.handyWorker.name} ${e.handyWorker.surname}</td>
 						<td data-label="${aplication_status}">${e.status}</td>
@@ -170,7 +170,7 @@
 							<td><a href="javascript:showDialogAprove('accept-application', acceptApplication, hideErrors, [${e.id}])"><spring:message code="fixUpTask.aplication.accept"/></a></td>
 							<td>
 								<jstl:if test="${e.status != 'REJECTED' }">
-									<a href="fixuptask/customer/application-reject.do?q=${e.id}&f=${fixuptask.id}"><spring:message code="fixUpTask.aplication.rejected"/></a>
+									<a href="fixuptask/customer/application-reject.do?q=${e.id}&f=${fixUpTask.id}"><spring:message code="fixUpTask.aplication.rejected"/></a>
 								</jstl:if>
 							</td>
 						</jstl:if>
@@ -189,7 +189,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<jstl:forEach var="e" items="${fixuptask.phases}">
+			<jstl:forEach var="e" items="${fixUpTask.phases}">
 				<tr>
 					<td data-label="${aplication_handyWorker}">${e.title}</td>
 					<td data-label="${aplication_handyWorker}">${e.description}</td>
@@ -229,12 +229,12 @@
 			
 			<div>
 				<label>${phase_startMoment}:</label>
-				<input type="text" name="startMoment" value="">
+				<input type="text" name="startMoment" value="" placeholder="yyyy-MM-dd HH:mm">
 			</div>
 			
 			<div>
 				<label>${phase_endMoment}:</label>
-				<input type="text" name="endMoment" value="">
+				<input type="text" name="endMoment" value="" placeholder="yyyy-MM-dd HH:mm">
 			</div>
 		</div>
 		
@@ -254,7 +254,7 @@
 			<input type="hidden" name="version" value="0">
 			<input type="hidden" name="comments" value="">
 			
-			<input type="hidden" name="fixUpTask" value="${fixuptask.id}">
+			<input type="hidden" name="fixUpTask" value="${fixUpTask.id}">
 			<input type="hidden" name="handyWorker" value="${workerId}">
 			<input type="hidden" name="status" value="PENDING">
 			<input type="hidden" name="applicationMoment" value="">
@@ -277,7 +277,7 @@
 	<div class="header"><spring:message code="fixUpTask.aplication.accept"/></div>
 	<div class="content">
 		<form id="accept-application-form">
-			<input type="hidden" name="fixUpTaskId" value="${fixuptask.id}">
+			<input type="hidden" name="fixUpTaskId" value="${fixUpTask.id}">
 			<input type="hidden" name="applicationId" value="0">
 			<div>
 				<label>holderName:</label>
@@ -346,7 +346,7 @@
 	function addPhase() {
 		$.ajax({
 			type : 'POST',
-			url : 'phase/handyworker/save-async.do?q=${fixuptask.id}',
+			url : 'phase/handyworker/save-async.do?q=${fixUpTask.id}',
 			data : $('#phase-save').serialize(),
 			success : function(data) {
 				let json = JSON.parse(data);
@@ -373,7 +373,7 @@
 	function addAplicacion() {
 		$.ajax({
 			type : 'POST',
-			url : 'application/handyworker/save-async.do?q=${fixuptask.id}',
+			url : 'application/handyworker/save-async.do?q=${fixUpTask.id}',
 			data : $('#application-save').serialize(),
 			success : function(data) {
 				let json = JSON.parse(data);
