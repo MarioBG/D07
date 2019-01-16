@@ -1,7 +1,6 @@
 package controllers;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import javax.validation.Valid;
 
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import domain.Box;
 import security.LoginService;
-import security.UserAccount;
 import services.BoxServices;
 
 @Controller
@@ -86,46 +84,6 @@ public class BoxController extends AbstractController {
 		}
 		return result;
 	}
-	
-	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
-	public ModelAndView delete(Box box, BindingResult binding) {
-		ModelAndView result;
-		try {
-			boxService.delete(box);
-			result = new ModelAndView("redirect:/box/list.do");
-		} catch (Throwable oops) {
-			result = createEditModelAndView(boxService.findOne(box.getId()), "box.commit.error");
-		}
-
-		return result;
-	}
-	
-	@RequestMapping(value = "/move", method = RequestMethod.GET)
-	public ModelAndView move(@RequestParam final int boxId) {
-		ModelAndView result;
-		Box box;
-
-		box = this.boxService.findOne(boxId);
-		Assert.notNull(box);
-
-		result = this.moveModelAndView(box);
-
-		return result;
-
-	}
-	
-	@RequestMapping(value = "/move", method = RequestMethod.POST, params = "save")
-	public ModelAndView move(@RequestParam(value="src") int src, @RequestParam(value="dst") int dst) {
-		ModelAndView result;
-			try {
-				this.boxService.moveBox(dst, src);
-				result = new ModelAndView("redirect:list.do");
-			} catch (final Throwable oops) {
-				result = this.moveModelAndView(boxService.findOne(src), "box.commit.error");
-			}
-
-		return result;
-	}
 
 	protected ModelAndView createEditModelAndView(Box box) {
 		ModelAndView result;
@@ -147,29 +105,4 @@ public class BoxController extends AbstractController {
 
 		return result;
 	}
-
-	protected ModelAndView moveModelAndView(final Box box) {
-		ModelAndView result;
-
-		result = this.moveModelAndView(box, null);
-
-		return result;
-	}
-	protected ModelAndView moveModelAndView(final Box box, final String messageCode) {
-		ModelAndView result;
-		Collection<Box> boxes;
-		UserAccount userAccount;
-
-		userAccount = LoginService.getPrincipal();
-		result = new ModelAndView("box/move");
-		boxes = this.boxService.findBoxesByUserAccountId(userAccount.getId());
-		boxes.remove(box);
-
-		result.addObject("boxes", boxes);
-		result.addObject("box", box);
-		result.addObject("message", messageCode);
-
-		return result;
-	}
 }
-

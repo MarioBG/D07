@@ -1,6 +1,5 @@
 package services;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -142,9 +141,6 @@ public class MessageService {
 	public Message create() {
 		Message res = new Message();
 		res.setMoment(new Date(System.currentTimeMillis() - 1));
-		Actor sender = actorservice.findSelf();
-		res.setSender(sender);
-		res.setRecipients(new ArrayList<Actor>());
 		return res;
 	}
 	

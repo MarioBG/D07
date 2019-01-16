@@ -1,6 +1,5 @@
 package controllers;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.validation.Valid;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +38,7 @@ public class MessageController  extends AbstractController{
 			super();
 		}
 		
-		@RequestMapping(value = "/send", method = RequestMethod.GET)
+		@RequestMapping(value = "/create", method = RequestMethod.GET)
 		public ModelAndView create() {
 			ModelAndView result;
 			Message message;
@@ -63,19 +63,19 @@ public class MessageController  extends AbstractController{
 			messages = this.messageService.findMessagesFromActor(actor);
 
 			result = new ModelAndView("message/list");
-			result.addObject("list", messages);
+			result.addObject("messages", messages);
 
 			return result;
 		}
 		
 		@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-		public ModelAndView save(@Valid final Message message, final BindingResult binding, @RequestParam(value = "usernames") String usernames) {
+		public ModelAndView save(@Valid @ModelAttribute(value = "message") final Message message, final BindingResult binding, @RequestParam(value = "usernames") Collection<String> usernames) {
 			ModelAndView result;
 			if (binding.hasErrors())
 				result = this.createEditModelAndView(message);
 			else
 				try {
-					this.messageService.sendMessage(Arrays.asList(usernames.split(";")), message);
+					this.messageService.sendMessage(usernames, message);
 					result = new ModelAndView("redirect:list.do");
 				} catch (final Throwable oops) {
 					result = this.createEditModelAndView(message, "message.commit.error");
@@ -120,7 +120,7 @@ public class MessageController  extends AbstractController{
 			Assert.notNull(message);
 			result = new ModelAndView("message/display");
 
-			result.addObject("data", message);
+			result.addObject("messageObject", message);
 
 			return result;
 
@@ -153,10 +153,10 @@ public class MessageController  extends AbstractController{
 			if(message.getId() != 0) {
 				result = new ModelAndView("message/edit");
 			} else {
-				result = new ModelAndView("message/send");
+				result = new ModelAndView("message/create");
 			}
 			
-			result.addObject("data", message);
+			result.addObject("message", messageCode);
 			result.addObject("messageCode", messageCode);
 
 			return result;
@@ -173,7 +173,7 @@ public class MessageController  extends AbstractController{
 			ModelAndView result;
 			result = new ModelAndView("message/move");
 
-			result.addObject("data", message);
+			result.addObject("message", message);
 			result.addObject("messageCode", messageCode);
 
 			return result;

@@ -33,6 +33,9 @@ public class FixUpTaskService {
 
 	@Autowired
 	private CustomerService		customerService;
+	
+	@Autowired
+	private ApplicationService applicationService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -77,6 +80,14 @@ public class FixUpTaskService {
 	}
 
 	public void delete(FixUpTask entity) {
+		this.fixUpTaskRepository.delete(entity);
+	}
+	
+	public void deleteFixUpTask(FixUpTask entity) {
+		Collection<Application> applications = entity.getApplications();
+		for(Application a:applications) {
+			applicationService.delete(a);
+		}
 		this.fixUpTaskRepository.delete(entity);
 	}
 
@@ -150,5 +161,18 @@ public class FixUpTaskService {
 
 	public FixUpTask findForComplaint(Complaint c) {
 		return this.fixUpTaskRepository.findForComplaintId(c.getId());
+	}
+	
+	public Boolean canBeDeleted(FixUpTask fixuptask) {
+		Assert.notNull(fixuptask);
+		Boolean res = true;
+		Collection<Application> applications = fixuptask.getApplications();
+		for(Application a:applications) {
+			if(a.getStatus()=="ACCEPTED") {
+				res = false;
+				break;
+			}
+		}
+		return res;
 	}
 }

@@ -174,54 +174,6 @@ public class ActorService {
 		
 	}
 	
-	public Collection<Actor>  findAllSuspisiousActors() {
-		Collection<Actor> res = actorRepository.findAllSuspisiousActors();
-		Assert.notNull(res);
-		return res;
-		
-	}
-
-	public Collection<Actor> findAllUnbannedActors() {
-		Collection<Actor> res = actorRepository.findAllUnbannedActors();
-		Assert.notNull(res);
-		return res;
-	}
-	
-	public Collection<Actor> findAllBannedActors() {
-		Collection<Actor> res = actorRepository.findAllBannedActors();
-		Assert.notNull(res);
-		return res;
-	}
-	
-	public Actor ban(int actorId){
-		Actor res = actorRepository.findOne(actorId);
-		UserAccount useraccount;
-		
-		Assert.isTrue(res.isSuspicious());
-		useraccount = res.getUserAccount();
-		Assert.isTrue(useraccount.isEnabled());
-		useraccount.setEnabled(false);
-		
-		res.setUserAccount(useraccount);
-		
-		return res;
-		
-	}
-	
-	public Actor unban(int actorId){
-		Actor res = actorRepository.findOne(actorId);
-		UserAccount useraccount;
-		
-		useraccount = res.getUserAccount();
-		Assert.isTrue(!useraccount.isEnabled());
-		useraccount.setEnabled(true);
-		
-		res.setUserAccount(useraccount);
-		
-		return res;
-		
-	}
-	
 //	public Actor create() {
 //
 //		Actor result;

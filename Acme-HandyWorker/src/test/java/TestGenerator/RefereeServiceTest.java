@@ -141,7 +141,7 @@ public class RefereeServiceTest extends AbstractTest {
 
 	@Test
 	public void findSelfAsignedComplaintsByRefereeTest() {
-		this.authenticate("referee0");
+		this.authenticate("useracount0");
 		UserAccount logedUserAccount = LoginService.getPrincipal();
 		Referee referee = refereeService.findRefereeByUserAccount(logedUserAccount);
 		Assert.isTrue(refereeService.exists(referee.getId()));
@@ -172,7 +172,7 @@ public class RefereeServiceTest extends AbstractTest {
 		newNote.setMoment(note.getMoment());
 		newNote.setId(note.getId());
 		newNote.setVersion(note.getVersion());
-		this.authenticate("referee0");
+		this.authenticate("useracount0");
 		Referee referee = refereeService.findRefereeByUserAccount(LoginService.getPrincipal());
 		Report report = reportService.findReportsInFinalModeByReferee(referee).iterator().next();
 		Report saved = refereeService.saveNoteInReport(report, newNote, null);

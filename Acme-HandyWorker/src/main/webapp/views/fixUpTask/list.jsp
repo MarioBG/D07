@@ -47,9 +47,9 @@
 		<display:column title="${phases}">
 			<a href="javascript:showDialog('view-phases', sucessPhases, 'q=${row.id}', 'fixuptask/async/phases.do')">${view}</a>
 		</display:column>
-		<display:column title="${complaints}">
+		<%-- <display:column title="${complaints}">
 			<a href="javascript:showDialog('view-complaints', sucessComplaints, 'q=${row.id}', 'fixuptask/async/complaints.do')">${view}</a>
-		</display:column>
+		</display:column> --%>
 	</security:authorize>
 
 	<display:column property="ticker" title="${ticker}" />

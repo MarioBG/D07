@@ -106,7 +106,7 @@
 		</div>
 	</div>
 
-	<jstl:if test="${enabled==true }">
+	<jstl:if test="${actor.userAccount.enabled==true}">
 		<input type="submit" class="ui primary button" name="save"
 			value="<spring:message code="handyWorker.save" />">
 	</jstl:if>

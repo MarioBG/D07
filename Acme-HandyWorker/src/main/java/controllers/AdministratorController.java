@@ -21,10 +21,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.ActorService;
 import services.AdministratorService;
 import services.ApplicationService;
 import services.CustomerService;
@@ -32,7 +30,6 @@ import services.FixUpTaskService;
 import services.HandyWorkerService;
 import services.NoteService;
 import services.RefereeService;
-import domain.Actor;
 import domain.Administrator;
 import domain.Customer;
 import domain.HandyWorker;
@@ -45,9 +42,6 @@ public class AdministratorController extends AbstractController {
 	// Constructors -----------------------------------------------------------
 	@Autowired
 	private AdministratorService	administratorservice;
-	
-	@Autowired
-	private ActorService actorService;
 
 	@Autowired
 	private CustomerService			customerService;
@@ -262,66 +256,4 @@ public class AdministratorController extends AbstractController {
 
 		return result;
 	}
-	
-	// List suspicious actors
-		@RequestMapping(value = "/listSuspicious", method = RequestMethod.GET)
-		public ModelAndView listSuspicious() {
-			ModelAndView res;
-			Collection<Actor> actors;
-
-			actors = administratorservice.findSuspiciousActor();
-
-			res = new ModelAndView("administrator/listSuspicious");
-			res.addObject("actors", actors);
-			res.addObject("requestURI", "administrator/listSuspicious.do");
-
-			return res;
-		}
-
-		// List banned actors
-		@RequestMapping(value = "/listBanned", method = RequestMethod.GET)
-		public ModelAndView listBanned() {
-			ModelAndView res;
-			Collection<Actor> actors;
-
-			actors = actorService.findAllBannedActors();
-
-			res = new ModelAndView("administrator/listBanned");
-			res.addObject("bannedactors", actors);
-			res.addObject("requestURI", "administrator/listBanned.do");
-
-			return res;
-		}
-
-		// Ban an actor
-		@RequestMapping(value = "/ban", method = RequestMethod.GET)
-		public ModelAndView ban(@RequestParam int actorId) {
-			ModelAndView res;
-			Actor a;
-
-			a = actorService.ban(actorId);
-
-			res = new ModelAndView("administrator/listBanned");
-			res.addObject("bannedactors", a);
-			res.addObject("requestURI", "administrator/listBanned");
-
-			return res;
-
-		}
-
-		// Unban actor
-		@RequestMapping(value = "/unban", method = RequestMethod.GET)
-		public ModelAndView unban(@RequestParam int actorId) {
-			ModelAndView res;
-			Actor a;
-
-			a = actorService.unban(actorId);
-
-			res = new ModelAndView("administrator/listSuspicious");
-			res.addObject("actors", a);
-			res.addObject("requestURI", "administrator/listSuspicious");
-
-			return res;
-
-		}
 }

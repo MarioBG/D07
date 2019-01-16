@@ -37,6 +37,7 @@ import dto.ApplicationAceptDTO;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import services.ActorService;
 import services.ApplicationService;
 import services.CategoryService;
 import services.ComplaintService;
@@ -66,6 +67,8 @@ public class FixUpTaskController {
 	ComplaintService	complaintservice;
 	@Autowired
 	HandyWorkerService	handyworkerservice;
+	@Autowired
+	ActorService actorService;
 
 	@RequestMapping(value = "/filter", method = RequestMethod.GET)
 	public ModelAndView filter(
@@ -96,6 +99,18 @@ public class FixUpTaskController {
 
 		ModelAndView model = new ModelAndView("fixuptask/list");
 		model.addObject("list", this.fixuptaskservice.findAll());
+		model.addObject("customers", customers);
+		return model;
+	}
+	
+	@RequestMapping(value = "/listCustomer", method = RequestMethod.GET)
+	public ModelAndView listCustomer(int customerId) {
+		Map<Integer, Customer> customers = new HashMap<Integer, Customer>();
+		for (FixUpTask f : this.customerservice.findOne(customerId).getFixUpTasks())
+			customers.put(f.getId(), this.customerservice.findCustomerByFixUpTask(f));
+
+		ModelAndView model = new ModelAndView("fixuptask/listCustomer");
+		model.addObject("list", customerservice.findOne(customerId).getFixUpTasks());
 		model.addObject("customers", customers);
 		return model;
 	}
@@ -199,7 +214,7 @@ public class FixUpTaskController {
 	public ModelAndView delete(FixUpTask fixuptask, BindingResult binding) {
 		ModelAndView result;
 		try {
-			this.fixuptaskservice.delete(fixuptask);
+			this.fixuptaskservice.deleteFixUpTask(fixuptask);
 			result = new ModelAndView("redirect:/fixuptask/list.do");
 		} catch (Throwable oops) {
 			result = this.createEditModelAndView(fixuptask, "fixuptask.commit.error");
@@ -290,8 +305,9 @@ public class FixUpTaskController {
 
 		fixuptask = this.fixuptaskservice.findOne(fixuptaskId);
 		Assert.notNull(fixuptask);
+		Boolean canBeDeleted = fixuptaskservice.canBeDeleted(fixuptask);
 		result = this.createEditModelAndView(fixuptask);
-
+		result.addObject("canBeDeleted", canBeDeleted);
 		return result;
 	}
 

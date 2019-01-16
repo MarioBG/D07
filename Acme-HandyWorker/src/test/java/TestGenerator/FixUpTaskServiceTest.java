@@ -2,7 +2,6 @@
 package TestGenerator;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -13,32 +12,34 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import domain.Customer;
-import domain.FixUpTask;
 import services.CustomerService;
 import services.FixUpTaskService;
 import services.HandyWorkerService;
 import utilities.AbstractTest;
+import domain.Customer;
+import domain.FixUpTask;
 
-@ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
-		"classpath:spring/config/packages.xml" })
+@ContextConfiguration(locations = {
+	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
+})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class FixUpTaskServiceTest extends AbstractTest {
 
 	@Autowired
-	private FixUpTaskService fixuptaskService;
+	private FixUpTaskService	fixuptaskService;
 	@Autowired
-	private CustomerService customerService;
+	private CustomerService		customerService;
 	@Autowired
-	private HandyWorkerService handyWorkerService;
+	private HandyWorkerService	handyWorkerService;
 
-//	@Test
-//	public void findFixUpTask() {
-//		List<FixUpTask> list = handyWorkerService.filter("970203", 10);
-//
-//		Assert.isTrue(!list.isEmpty());
-//	}
+
+	//	@Test
+	//	public void findFixUpTask() {
+	//		List<FixUpTask> list = handyWorkerService.filter("970203", 10);
+	//
+	//		Assert.isTrue(!list.isEmpty());
+	//	}
 
 	@Test
 	public void findAllFixUpTaskTest() {
@@ -86,7 +87,7 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		Assert.notNull(res);
 		Assert.notEmpty(res);
 	}
-	
+
 	@Test
 	public void findAvgMinMaxStrDvtPerFixUpTaskTest() {
 		Double[] res = this.fixuptaskService.findAvgMinMaxStrDvtPerFixUpTask();
