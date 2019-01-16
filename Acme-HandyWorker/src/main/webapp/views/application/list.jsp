@@ -59,6 +59,7 @@
 		<jstl:when test="${row.status eq 'CANCELLED'}">
 			<jstl:set value="cancelled" var="style"/>
 		</jstl:when>
+		<jstl:otherwise><jstl:set value="" var="style"/></jstl:otherwise>
 		
 	</jstl:choose>
 	

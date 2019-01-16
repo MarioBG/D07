@@ -16,7 +16,9 @@
 <spring:message code="message.moment" var="moment" />
 <spring:message code="message.view" var="viewMessage" />
 <spring:message code="message.delete" var="deleteMessage" />
-
+<p><spring:message code="box.current"/>: ${box.name }</p>
+<p><jstl:if test="${not empty box.parentBox}"><spring:message code="box.parentBox"/>: ${box.parentBox.name}</jstl:if></p>
+<h3><spring:message code="message.messages"/></h3>
 <display:table name="box" id="row" requestURI="box/display.do" class="displaytag">
 	<display:column property="name" title="${name}" />
 	<jstl:if test="${not empty row.parentBox }">

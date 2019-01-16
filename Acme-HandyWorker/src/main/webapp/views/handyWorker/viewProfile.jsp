@@ -77,10 +77,11 @@
 			</tbody>
 		</table>
 		
-		
-		<input type="button" name="save" class="ui button"
-		 value="<spring:message code="handyWorker.modify" />"
-		 onclick="javascript: relativeRedir('handyWorker/edit.do');" />
+		<security:authorize access="hasRole('HANDYWORKER')">
+			<input type="button" name="save" class="ui button"
+			 value="<spring:message code="handyWorker.modify" />"
+			 onclick="javascript: relativeRedir('handyWorker/edit.do');" />
+		</security:authorize>
 	 </jstl:when>
 	 <jstl:otherwise>
 	 	<h3><spring:message code="handyWorker.notfound"/></h3>

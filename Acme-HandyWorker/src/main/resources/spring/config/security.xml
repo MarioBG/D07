@@ -83,7 +83,7 @@
 		<security:intercept-url pattern="/customer/register.do" access="!isAuthenticated()" />
 		
 		
-		<security:intercept-url pattern="/handyWorker/viewProfile.do" access="hasRole('HANDYWORKER')" />  
+		<security:intercept-url pattern="/handyWorker/viewProfile.do" access="hasAnyRole('CUSTOMER','HANDYWORKER')" />  
 		<security:intercept-url pattern="/handyWorker/edit.do" access="hasRole('HANDYWORKER') or isAnonymous()" />
 		<security:intercept-url pattern="/handyWorker/register.do" access="!isAuthenticated()" />
 		<security:intercept-url pattern="/fixuptask/filter.do" access="hasRole('HANDYWORKER')" />
