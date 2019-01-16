@@ -18,16 +18,16 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <jstl:choose>
-	<jstl:when test="${not empty actor}">
+	<jstl:when test="${not empty handyWorker}">
 		<table
-			class="ui celled table <jstl:if test='${actor.suspicious}'>red</jstl:if>">
+			class="ui celled table <jstl:if test='${handyWorker.suspicious}'>red</jstl:if>">
 			<thead>
 				<tr>
 					<th colspan="2">
 						<h4 class="ui image header">
-							<img src="${actor.photo}" class="ui mini rounded image">
+							<img src="${handyWorker.photo}" class="ui mini rounded image">
 							<div class="content">
-									<spring:message code="handyWorker.profile.title"/> ${actor.name}
+									<spring:message code="handyWorker.profile.title"/> ${handyWorker.name}
 								</div>
 						</h4>
 					</th>
@@ -36,39 +36,39 @@
 			<tbody>
 				<tr>
 					<td><spring:message code="handyWorker.name" />
-					<td data-label="name">${actor.name}</td>
+					<td data-label="name">${handyWorker.name}</td>
 				</tr>
 				<tr>
 					<td><spring:message code="handyWorker.middleName" />
-					<td data-label="MiddleName">${actor.middleName}</td>
+					<td data-label="MiddleName">${handyWorker.middleName}</td>
 				</tr>
 				<tr>
 					<td><spring:message code="handyWorker.surname" />
-					<td data-label="surname">${actor.surname}</td>
+					<td data-label="surname">${handyWorker.surname}</td>
 				</tr>
 				<tr>
 					<td><spring:message code="handyWorker.email" />
-					<td data-label="email">${actor.email}</td>
+					<td data-label="email">${handyWorker.email}</td>
 				</tr>
 				<tr>
 					<td><spring:message code="handyWorker.phoneNumber" />
-					<td data-label="phoneNumber">${actor.phoneNumber}</td>
+					<td data-label="phoneNumber">${handyWorker.phoneNumber}</td>
 				</tr>
 				<tr>
 					<td><spring:message code="handyWorker.address" />
-					<td data-label="address">${actor.address}</td>
+					<td data-label="address">${handyWorker.address}</td>
 				</tr>
 				<tr>
 					<td><spring:message code="handyWorker.make" />
-					<td data-label="make">${actor.make}</td>
+					<td data-label="make">${handyWorker.make}</td>
 				</tr>
-				<jstl:if test="${actor.curriculum.id!=0}">
+				<jstl:if test="${handyWorker.curriculum.id!=0}">
 				<tr>
 					<td><spring:message code="handyWorker.currilum.ticker" />
 					<td>
 						<a href="handyWorker/viewCurriculum.do">
 							<div style="height:100%;width:100%">
-						 		${actor.curriculum.ticker}
+						 		${handyWorker.curriculum.ticker}
 						 	</div>
 						 </a>
 					</td>

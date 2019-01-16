@@ -28,6 +28,7 @@ import domain.Application;
 import domain.Box;
 import domain.Customer;
 import domain.Endorsement;
+import domain.Finder;
 import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Message;
@@ -56,6 +57,9 @@ public class HandyWorkerService {
 
 	@Autowired
 	private ApplicationService		applicationService;
+
+	@Autowired
+	private FinderService			finderService;
 
 	@Autowired
 	private ReportService			reportService;
@@ -135,12 +139,13 @@ public class HandyWorkerService {
 			spambox.setPredefined(true);
 			spambox.setMessages(messages);
 			Collection<Box> boxes = new LinkedList<Box>();
+			handyWorker.setFinder(this.finderService.save(new Finder()));
 			boxes.add(this.boxservices.save(inbox));
 			boxes.add(this.boxservices.save(outbox));
 			boxes.add(this.boxservices.save(trashbox));
 			boxes.add(this.boxservices.save(spambox));
 			handyWorker.setBoxes(boxes);
-			handyWorker.setMake(handyWorker.getName() + " " + handyWorker.getMiddleName() + " " + handyWorker.getSurname());
+			handyWorker.setMake(handyWorker.getName() + (handyWorker.getMiddleName() == null ? " " + handyWorker.getMiddleName() : "") + " " + handyWorker.getSurname());
 
 		}
 

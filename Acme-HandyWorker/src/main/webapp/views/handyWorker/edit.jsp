@@ -36,8 +36,6 @@
 	<form:hidden path="applications" />
 	<form:hidden path="tutorials" />
 	<form:hidden path="curriculum" />
-	<form:hidden path="finder" />
-	<form:hidden path="make" />
 	
 
 	<div class="ui equal width form">
