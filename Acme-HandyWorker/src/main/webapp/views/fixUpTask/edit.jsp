@@ -236,6 +236,14 @@
 				<label>${phase_endMoment}:</label>
 				<input type="text" name="endMoment" value="" placeholder="yyyy-MM-dd HH:mm">
 			</div>
+			
+			<div>
+				<a href="phase/handyworker/edit-async.do?phaseId=${row.id}">${categoryEdit}</a>
+			</div>
+			
+			<div>
+				<input type="submit" class="btn btn-warning" name="delete" value="<spring:message code="category.delete" />">
+			</div>
 		</div>
 		
 		<h2 style="display: none" id="phases-errors" class="error">${error}</h2>
