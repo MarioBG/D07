@@ -34,6 +34,7 @@ import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Phase;
 import dto.ApplicationAceptDTO;
+import dto.ApplicationRejectDTO;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
@@ -200,15 +201,24 @@ public class FixUpTaskController {
 	// return edit(fixUpTaskId);
 	// }
 
-	@RequestMapping(value = "/customer/application-reject", method = RequestMethod.GET)
-	public ModelAndView rejectApplication(@RequestParam(value = "q") final int applicationId,
-			@RequestParam(value = "f") final int fixUpTaskId) {
-		final Application application = this.applicationservice.findOne(applicationId);
-		application.setStatus("REJECTED");
+	@ResponseBody
+	@RequestMapping(value = "/customer/application-reject", method = RequestMethod.POST)
+	public String rejectApplication(@RequestBody final String dto) {
+		final Gson gson = new Gson();
+		final JsonObject json = new JsonObject();
+		final JsonArray erros = new JsonArray();
+		final ApplicationRejectDTO parsed = gson.fromJson(dto, ApplicationRejectDTO.class);
 
-		this.applicationservice.save(application);
+		try {
+			final Application application = this.applicationservice.reject(parsed);
+			json.addProperty("application", application.getId());
+		} catch (final Exception e) {
+			erros.add(e.getMessage());
+		}
 
-		return this.edit(fixUpTaskId);
+		json.add("erros", erros);
+
+		return json.toString();
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
@@ -216,7 +226,7 @@ public class FixUpTaskController {
 		ModelAndView result;
 		try {
 			this.fixuptaskservice.deleteFixUpTask(fixUpTask);
-			result = new ModelAndView("redirect:/fixuptask/list.do");
+			result = new ModelAndView("redirect:/fixuptask/listCustomer.do");
 		} catch (final Throwable oops) {
 			result = this.createEditModelAndView(fixUpTask, "fixuptask.commit.error");
 		}
@@ -231,7 +241,6 @@ public class FixUpTaskController {
 
 		fixUpTask = this.fixuptaskservice.create();
 		result = this.createEditModelAndView(fixUpTask);
-
 		return result;
 	}
 

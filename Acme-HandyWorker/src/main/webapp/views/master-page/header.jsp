@@ -46,7 +46,6 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="customer/viewProfile.do"><spring:message code="master.page.customer.view" /></a></li>
-					<li><a href="fixuptask/list.do"><spring:message code="fixuptask.list" /></a></li>
 					<li><a href="complaint/customer/list.do"><spring:message code="master.page.complaint.list" /></a></li>
 					<li><a href="application/list.do"><spring:message code="master.page.applications" /></a></li>
 				</ul>
@@ -116,6 +115,7 @@
 				<ul>
 					<li class="arrow"></li>
 					<li><a href="box/list.do"><spring:message code="master.page.boxes" /></a></li>
+					<li><a href="message/send.do"><spring:message code="master.page.messages.send" /></a></li>
 				</ul>
 			</li>
 			

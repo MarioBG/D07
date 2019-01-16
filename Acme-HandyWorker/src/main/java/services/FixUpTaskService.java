@@ -17,6 +17,7 @@ import domain.Category;
 import domain.Complaint;
 import domain.Customer;
 import domain.FixUpTask;
+import domain.HandyWorker;
 import domain.Phase;
 import repositories.FixUpTaskRepository;
 
@@ -36,6 +37,9 @@ public class FixUpTaskService {
 
 	@Autowired
 	private ApplicationService applicationService;
+
+	@Autowired
+	private HandyWorkerService handyWorkerService;
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -83,12 +87,18 @@ public class FixUpTaskService {
 	}
 
 	public void deleteFixUpTask(FixUpTask entity) {
-		Collection<Application> applications = entity.getApplications();
-		for (Application a : applications) {
-			if (a.getStatus().equals("ACCEPTED"))
-				break;
+		HandyWorker hw;
+		for (Application a : entity.getApplications()) {
+			hw = this.handyWorkerService.findHandyWorkerByApplication(a);
+			hw.getApplications().remove(a);
+
+			entity.getApplications().remove(a);
+
 			this.applicationService.delete(a);
+			this.fixUpTaskRepository.saveAndFlush(entity);
+			this.handyWorkerService.save(hw);
 		}
+
 		this.fixUpTaskRepository.delete(entity);
 	}
 
@@ -165,13 +175,11 @@ public class FixUpTaskService {
 
 	public Boolean canBeDeleted(FixUpTask fixuptask) {
 		Assert.notNull(fixuptask);
-		Boolean res = true;
 		Collection<Application> applications = fixuptask.getApplications();
 		for (Application a : applications)
-			if (a.getStatus() == "ACCEPTED") {
-				res = false;
-				break;
-			}
-		return res;
+			if ("ACCEPTED".equalsIgnoreCase(a.getStatus()))
+				return false;
+
+		return true;
 	}
 }

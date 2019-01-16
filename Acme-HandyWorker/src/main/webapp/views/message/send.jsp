@@ -15,25 +15,31 @@
 <spring:message code="message.saveStr" var="saveStr" />
 <spring:message code="message.destinations" var="destinations" />
 
-<form:form action="message/actor/send.do" modelAttribute="message">
+<form:form action="message/actor/send.do" modelAttribute="_message">
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
 	<form:hidden path="moment"/>
 	
-	<input type="text" name="destinations" placeholder="${destinations}">
+	<div><input type="text" name="destinations" placeholder="${destinations}"></div>
 	
-	<form:input path="subject" placeholder="${subject }"/>
-	<form:errors cssClass="error" path="subject"></form:errors>
+	<div>
+		<form:input path="subject" placeholder="${subject }"/>
+		<form:errors cssClass="error" path="subject"></form:errors>
+	</div>
 	
-	<form:textarea path="body"/>
-	<form:errors cssClass="error" path="body"></form:errors>
+	<div>
+		<form:textarea path="body"/>
+		<form:errors cssClass="error" path="body"></form:errors>
+	</div>
 	
-	<form:select path="priority">
-		<form:option value="NEUTRAL"></form:option>
-		<form:option value="HIGH"></form:option>
-		<form:option value="LOW"></form:option>
-	</form:select>
-	<form:errors cssClass="error" path="priority"></form:errors>
+	<div>
+		<form:select path="priority">
+			<form:option value="NEUTRAL"></form:option>
+			<form:option value="HIGH"></form:option>
+			<form:option value="LOW"></form:option>
+		</form:select>
+		<form:errors cssClass="error" path="priority"></form:errors>
+	</div>
 	
 	<input type="submit" name="save" value="${saveStr }">
 </form:form>

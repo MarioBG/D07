@@ -121,8 +121,8 @@
 			<form:errors path="warranty"/>
 		</div>
 
-	<jstl:if test="${canBeDeleted == true }">
-	<input type="submit" class="btn btn-warning" name="delete" value="<spring:message code="warranty.delete" />">
+	<jstl:if test="${canBeDeleted}">
+		<input type="submit" class="btn btn-warning" name="delete" value="<spring:message code="warranty.delete" />">
  	</jstl:if>
 	<input type="button" name="cancel" value="<spring:message code="warranty.cancel" />" onclick="javascript: relativeRedir('fixuptask/list.do')">
 	
@@ -167,10 +167,14 @@
 						<td data-label="${aplication_offeredPrice}">${e.offeredPrice}</td>
 						<td data-label="${aplication_applicationMoment}">${e.applicationMoment}</td>
 						<jstl:if test="${not canAddPhase}">
-							<td><a href="javascript:showDialogAprove('accept-application', acceptApplication, hideErrors, [${e.id}])"><spring:message code="fixUpTask.aplication.accept"/></a></td>
+							<td>
+								<jstl:if test="${e.status == 'PENDING'}">
+									<a href="javascript:showDialogAprove('accept-application', acceptApplication, hideErrors, [${e.id}])"><spring:message code="fixUpTask.aplication.accept"/></a>
+								</jstl:if>
+							</td>
 							<td>
 								<jstl:if test="${e.status != 'REJECTED' }">
-									<a href="fixuptask/customer/application-reject.do?q=${e.id}&f=${fixUpTask.id}"><spring:message code="fixUpTask.aplication.rejected"/></a>
+									<a href="javascript:showDialogAprove('reject-application', rejectApplication, hideErrors, [${e.id}])"><spring:message code="fixUpTask.aplication.rejected"/></a>
 								</jstl:if>
 							</td>
 						</jstl:if>
@@ -324,7 +328,48 @@
 	</div>
 </div>
 
+<div class="ui modal" id="reject-application" style="display: none">
+	<div class="header"><spring:message code="fixUpTask.aplication.rejected"/></div>
+	<div class="content">
+		<form id="reject-application-form">
+			<input type="hidden" name="fixUpTaskId" value="${fixUpTask.id}">
+			<input type="hidden" name="applicationId" value="0">
+			<div>
+				<label>Comment:</label><br />
+				<textarea rows="4" cols="5" name="comment"></textarea>
+			</div>
+		</form>
+	</div>
+	<h2 style="display: none" id="reject-errors" class="error">${error}</h2>
+	<div class="actions">
+		<div class="ui approve button">${save}</div>
+		<div class="ui cancel button">${cancel}</div>
+	</div>
+</div>
+
 <script>
+	function rejectApplication(row) {
+		$('#reject-errors').html('');
+		$('[name="applicationId"]').val(row[0]);
+		
+		$.ajax({
+			type : 'POST',
+			url : 'fixuptask/customer/application-reject.do',
+			data : JSON.stringify(getFormData($('#reject-application-form'))),
+			contentType: 'application/json',
+			success : function(data) {
+				let json = JSON.parse(data);
+				
+				if(json.erros.length > 0) {
+					$('#reject-errors').html(json.erros[0]).show();
+				} else {
+					location.href = 'fixuptask/edit.do?fixUpTaskId=${fixUpTask.id}'
+				}
+			}
+		});
+		
+	}
+
 	function acceptApplication(row) {
 		$('#accept-errors').html('');
 		$('[name="applicationId"]').val(row[0]);
@@ -344,7 +389,6 @@
 				}
 			}
 		});
-		
 	}
 	
 	function hideErrors() {
