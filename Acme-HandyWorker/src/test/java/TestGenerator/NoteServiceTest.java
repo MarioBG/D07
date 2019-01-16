@@ -28,7 +28,6 @@ public class NoteServiceTest extends AbstractTest {
 	public void saveNoteTest() {
 		Note note, saved;
 		Collection<Note> notes;
-		authenticate("referee0");
 		note = noteService.findAll().iterator().next();
 		note.setVersion(57);
 		saved = noteService.save(note);
@@ -55,7 +54,6 @@ public class NoteServiceTest extends AbstractTest {
 
 	@Test
 	public void deleteNoteTest() {
-		authenticate("referee0");
 		Note note = noteService.findAll().iterator().next();
 		Assert.notNull(note);
 		Assert.isTrue(note.getId() != 0);

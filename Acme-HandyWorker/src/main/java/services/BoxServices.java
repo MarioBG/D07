@@ -46,7 +46,7 @@ public class BoxServices {
 	}
 
 	public boolean exists(Integer id) {
-		return boxrepository.exists(id);
+		return actorservice.exists(id);
 	}
 
 	public Box findInbox(Actor a) {
@@ -118,8 +118,7 @@ public class BoxServices {
 			saved = this.findOne(box.getId());
 			Assert.notNull(saved);
 			saved.setName(box.getName());
-			//saved.setParentBox(box.getParentBox());
-			//saved.setMessages(box.getMessages());
+			saved.setParentBox(box.getParentBox());
 			result = boxrepository.save(saved);
 			Assert.notNull(result);
 		}else {
@@ -148,12 +147,6 @@ public class BoxServices {
 		Assert.notNull(entity);
 		Assert.isTrue(!"INBOX".equals(entity.getName()) && !"OUTBOX".equals(entity.getName())
 				&& !"TRASHBOX".equals(entity.getName()) && !"SPAMBOX".equals(entity.getName()));
-		Actor actor = actorservice.findByPrincipal();
-		Assert.notNull(actor);
-		
-		actor.getBoxes().remove(entity);
-		actorservice.save(actor);
-		
 		Collection<Box> childrenBoxes = this.findAllChildrenBoxes(entity);
 		if (!childrenBoxes.isEmpty()) {
 			for (Box b : childrenBoxes) {
@@ -172,15 +165,17 @@ public class BoxServices {
 
 	}
 
-	public Box moveBox(int dstId, int boxId) {
-		Box dst = boxrepository.findOne(dstId);
-		Box box = boxrepository.findOne(boxId);
-		
+	public Box moveBox(Box dst, Box box) {
 		Assert.notNull(dst);
 		Assert.notNull(box);
 
 		Actor self = actorservice.findSelf();
 
+		if(dst == null) {
+			box.setParentBox(null);
+		}else {
+			box.setParentBox(dst);
+		}
 		box.setParentBox(dst);
 
 		boxrepository.save(self.getBoxes());

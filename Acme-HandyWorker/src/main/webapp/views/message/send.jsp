@@ -12,15 +12,13 @@
 <spring:message code="message.subject" var="subject" />
 <spring:message code="message.body" var="body" />
 <spring:message code="message.priority" var="priority" />
-<spring:message code="message.messageSave" var="messageSave" />
-<spring:message code="message.recipients" var="destinations" />
+<spring:message code="message.saveStr" var="saveStr" />
+<spring:message code="message.destinations" var="destinations" />
 
-<form:form id="submit-form" action="message/edit.do" modelAttribute="data">
+<form:form action="message/actor/send.do" modelAttribute="message">
 	<form:hidden path="id"/>
 	<form:hidden path="version"/>
 	<form:hidden path="moment"/>
-	<form:hidden path="sender"/>
-	<form:hidden path="recipients"/>
 	
 	<input type="text" name="destinations" placeholder="${destinations}">
 	
@@ -37,14 +35,5 @@
 	</form:select>
 	<form:errors cssClass="error" path="priority"></form:errors>
 	
-	<input type="submit" class="button" name="save" value="<spring:message code="message.messageSave" />">
+	<input type="submit" name="save" value="${saveStr }">
 </form:form>
-
-<script>
-	$('#submit-form').submit(function() {
-		let username = $('[name="destinations"]').val();
-		let action = $('#submit-form').attr('action');
-		$('#submit-form').attr('action', action + '?usernames=' + username);
-	    return true;
-	});
-</script>

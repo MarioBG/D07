@@ -23,18 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import security.Authority;
-import security.LoginService;
-import security.UserAccount;
-import services.ApplicationService;
-import services.CategoryService;
-import services.ComplaintService;
-import services.CustomerService;
-import services.FixUpTaskService;
-import services.HandyWorkerService;
-import services.PhaseService;
-import services.WarrantyService;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -46,33 +34,49 @@ import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Phase;
 import dto.ApplicationAceptDTO;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
+import services.ActorService;
+import services.ApplicationService;
+import services.CategoryService;
+import services.ComplaintService;
+import services.CustomerService;
+import services.FixUpTaskService;
+import services.HandyWorkerService;
+import services.PhaseService;
+import services.WarrantyService;
 
 @Controller
 @RequestMapping("/fixuptask")
 public class FixUpTaskController {
 
 	@Autowired
-	FixUpTaskService	fixuptaskservice;
+	FixUpTaskService fixuptaskservice;
 	@Autowired
-	CustomerService		customerservice;
+	CustomerService customerservice;
 	@Autowired
-	CategoryService		categoryService;
+	CategoryService categoryService;
 	@Autowired
-	WarrantyService		warrantyService;
+	WarrantyService warrantyService;
 	@Autowired
-	ApplicationService	applicationservice;
+	ApplicationService applicationservice;
 	@Autowired
-	PhaseService		phaseservice;
+	PhaseService phaseservice;
 	@Autowired
-	ComplaintService	complaintservice;
+	ComplaintService complaintservice;
 	@Autowired
-	HandyWorkerService	handyworkerservice;
-
+	HandyWorkerService handyworkerservice;
+	@Autowired
+	ActorService actorService;
 
 	@RequestMapping(value = "/filter", method = RequestMethod.GET)
-	public ModelAndView filter(final Principal principal, final HttpServletRequest request, @RequestParam(value = "command", required = false) final String command, @RequestParam(value = "startDate", required = false) final String startDate,
-		@RequestParam(value = "endDate", required = false) final String endDate, @RequestParam(value = "maxPrice", required = false, defaultValue = "-1") final double maxPrice,
-		@RequestParam(value = "minPrice", required = false, defaultValue = "-1") final double minPrice) {
+	public ModelAndView filter(final Principal principal, final HttpServletRequest request,
+			@RequestParam(value = "command", required = false) final String command,
+			@RequestParam(value = "startDate", required = false) final String startDate,
+			@RequestParam(value = "endDate", required = false) final String endDate,
+			@RequestParam(value = "maxPrice", required = false, defaultValue = "-1") final double maxPrice,
+			@RequestParam(value = "minPrice", required = false, defaultValue = "-1") final double minPrice) {
 
 		final ModelAndView model = new ModelAndView("fixuptask/filter");
 		try {
@@ -93,6 +97,18 @@ public class FixUpTaskController {
 
 		final ModelAndView model = new ModelAndView("fixuptask/list");
 		model.addObject("list", this.fixuptaskservice.findAll());
+		model.addObject("customers", customers);
+		return model;
+	}
+
+	@RequestMapping(value = "/listCustomer", method = RequestMethod.GET)
+	public ModelAndView listCustomer(int customerId) {
+		Map<Integer, Customer> customers = new HashMap<Integer, Customer>();
+		for (FixUpTask f : this.customerservice.findOne(customerId).getFixUpTasks())
+			customers.put(f.getId(), this.customerservice.findCustomerByFixUpTask(f));
+
+		ModelAndView model = new ModelAndView("fixuptask/listCustomer");
+		model.addObject("list", this.customerservice.findOne(customerId).getFixUpTasks());
 		model.addObject("customers", customers);
 		return model;
 	}
@@ -172,18 +188,21 @@ public class FixUpTaskController {
 		return json.toString();
 	}
 
-	//	@RequestMapping(value = "/customer/application-accept", method = RequestMethod.GET)
-	//	public ModelAndView acceptApplication(@RequestParam(value = "q") int applicationId, @RequestParam(value = "f") int fixUpTaskId) {
-	//		Application application = applicationservice.findOne(applicationId);
-	//		application.setStatus("ACCEPTED");
-	//		
-	//		applicationservice.save(application);
-	//		
-	//		return edit(fixUpTaskId);
-	//	}
+	// @RequestMapping(value = "/customer/application-accept", method =
+	// RequestMethod.GET)
+	// public ModelAndView acceptApplication(@RequestParam(value = "q") int
+	// applicationId, @RequestParam(value = "f") int fixUpTaskId) {
+	// Application application = applicationservice.findOne(applicationId);
+	// application.setStatus("ACCEPTED");
+	//
+	// applicationservice.save(application);
+	//
+	// return edit(fixUpTaskId);
+	// }
 
 	@RequestMapping(value = "/customer/application-reject", method = RequestMethod.GET)
-	public ModelAndView rejectApplication(@RequestParam(value = "q") final int applicationId, @RequestParam(value = "f") final int fixUpTaskId) {
+	public ModelAndView rejectApplication(@RequestParam(value = "q") final int applicationId,
+			@RequestParam(value = "f") final int fixUpTaskId) {
 		final Application application = this.applicationservice.findOne(applicationId);
 		application.setStatus("REJECTED");
 
@@ -196,7 +215,7 @@ public class FixUpTaskController {
 	public ModelAndView delete(final FixUpTask fixUpTask, final BindingResult binding) {
 		ModelAndView result;
 		try {
-			this.fixuptaskservice.delete(fixUpTask);
+			this.fixuptaskservice.deleteFixUpTask(fixUpTask);
 			result = new ModelAndView("redirect:/fixuptask/list.do");
 		} catch (final Throwable oops) {
 			result = this.createEditModelAndView(fixUpTask, "fixuptask.commit.error");
@@ -262,7 +281,8 @@ public class FixUpTaskController {
 					break;
 				}
 
-			result.addObject("acceptedApplication", this.applicationservice.findAcceptedHandyWorkerApplicationByFixUpTaskId(fixUpTask.getId(), worker.getId()));
+			result.addObject("acceptedApplication", this.applicationservice
+					.findAcceptedHandyWorkerApplicationByFixUpTaskId(fixUpTask.getId(), worker.getId()));
 			result.addObject("workerId", worker.getId());
 		} else if (isCustomer)
 			for (final Application a : fixUpTask.getApplications())
@@ -287,8 +307,9 @@ public class FixUpTaskController {
 
 		fixUpTask = this.fixuptaskservice.findOne(fixUpTaskId);
 		Assert.notNull(fixUpTask);
+		Boolean canBeDeleted = this.fixuptaskservice.canBeDeleted(fixUpTask);
 		result = this.createEditModelAndView(fixUpTask);
-
+		result.addObject("canBeDeleted", canBeDeleted);
 		return result;
 	}
 
@@ -298,7 +319,8 @@ public class FixUpTaskController {
 
 		if (binding.hasErrors()) {
 			for (final ObjectError e : binding.getAllErrors())
-				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
+				System.out.println(
+						e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 			result = this.createEditModelAndView(fixUpTask);
 		} else
 			try {

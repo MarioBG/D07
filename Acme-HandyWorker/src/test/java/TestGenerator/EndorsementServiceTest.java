@@ -36,36 +36,36 @@ public class EndorsementServiceTest extends AbstractTest {
 	private HandyWorkerService	handyWorkerService;
 
 
-//	@Test
-//	public void endorseAsCustomer() {
-//		Endorsement endorsement, saved;
-//		Collection<Endorsement> endorsements;
-//		endorsement = new Endorsement();
-//		final Customer c = this.customerService.findAll().iterator().next();
-//		final HandyWorker h = this.handyWorkerService.findAll().iterator().next();
-//		this.authenticate(c.getUserAccount().getUsername());
-//		endorsement.setHandyWorker(h);
-//		endorsement.setComment("Cosas cosos de chapuzas");
-//		saved = this.endorsementService.save(endorsement);
-//		endorsements = this.endorsementService.findAll();
-//		Assert.isTrue(endorsements.contains(saved));
-//	}
+	@Test
+	public void endorseAsCustomer() {
+		Endorsement endorsement, saved;
+		Collection<Endorsement> endorsements;
+		endorsement = new Endorsement();
+		final Customer c = this.customerService.findAll().iterator().next();
+		final HandyWorker h = this.handyWorkerService.findAll().iterator().next();
+		this.authenticate(c.getUserAccount().getUsername());
+		endorsement.setHandyWorker(h);
+		endorsement.setComment("Cosas cosos de chapuzas");
+		saved = this.endorsementService.save(endorsement);
+		endorsements = this.endorsementService.findAll();
+		Assert.isTrue(endorsements.contains(saved));
+	}
 
-//	@Test
-//	// TODO TransientObjectException (objeto sin guardar?)
-//	public void endorseAsHandyWorker() {
-//		Endorsement endorsement, saved;
-//		Collection<Endorsement> endorsements;
-//		endorsement = new Endorsement();
-//		final Customer c = this.customerService.findAll().iterator().next();
-//		final HandyWorker h = this.handyWorkerService.findAll().iterator().next();
-//		this.authenticate(h.getUserAccount().getUsername());
-//		endorsement.setCustomer(c);
-//		endorsement.setComment("Cosas cosos de chapuzas");
-//		saved = this.endorsementService.save(endorsement);
-//		endorsements = this.endorsementService.findAll();
-//		Assert.isTrue(endorsements.contains(saved));
-//	}
+	@Test
+	// TODO TransientObjectException (objeto sin guardar?)
+	public void endorseAsHandyWorker() {
+		Endorsement endorsement, saved;
+		Collection<Endorsement> endorsements;
+		endorsement = new Endorsement();
+		final Customer c = this.customerService.findAll().iterator().next();
+		final HandyWorker h = this.handyWorkerService.findAll().iterator().next();
+		this.authenticate(h.getUserAccount().getUsername());
+		endorsement.setCustomer(c);
+		endorsement.setComment("Cosas cosos de chapuzas");
+		saved = this.endorsementService.save(endorsement);
+		endorsements = this.endorsementService.findAll();
+		Assert.isTrue(endorsements.contains(saved));
+	}
 
 	@Test
 	public void findAllEndorsementTest() {

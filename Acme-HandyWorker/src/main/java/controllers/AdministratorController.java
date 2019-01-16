@@ -1,8 +1,8 @@
 /*
  * AdministratorController.java
- * 
+ *
  * Copyright (C) 2018 Universidad de Sevilla
- * 
+ *
  * The use of this project is hereby constrained to the conditions of the
  * TDG Licence, a copy of which you may download from
  * http://www.tdg-seville.info/License.html
@@ -24,6 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import domain.Actor;
+import domain.Administrator;
+import domain.Customer;
+import domain.HandyWorker;
+import domain.Referee;
 import services.ActorService;
 import services.AdministratorService;
 import services.ApplicationService;
@@ -32,11 +37,6 @@ import services.FixUpTaskService;
 import services.HandyWorkerService;
 import services.NoteService;
 import services.RefereeService;
-import domain.Actor;
-import domain.Administrator;
-import domain.Customer;
-import domain.HandyWorker;
-import domain.Referee;
 
 @Controller
 @RequestMapping("/administrator")
@@ -44,29 +44,28 @@ public class AdministratorController extends AbstractController {
 
 	// Constructors -----------------------------------------------------------
 	@Autowired
-	private AdministratorService	administratorservice;
+	private AdministratorService administratorservice;
 
 	@Autowired
-	private ActorService			actorService;
+	private ActorService actorService;
 
 	@Autowired
-	private CustomerService			customerService;
+	private CustomerService customerService;
 
 	@Autowired
-	private ApplicationService		applicationService;
+	private ApplicationService applicationService;
 
 	@Autowired
-	private HandyWorkerService		handyWorkerService;
+	private HandyWorkerService handyWorkerService;
 
 	@Autowired
-	private NoteService				noteService;
+	private NoteService noteService;
 
 	@Autowired
-	private FixUpTaskService		fixUpTaskService;
+	private FixUpTaskService fixUpTaskService;
 
 	@Autowired
-	private RefereeService			refereeService;
-
+	private RefereeService refereeService;
 
 	public AdministratorController() {
 		super();
@@ -114,7 +113,8 @@ public class AdministratorController extends AbstractController {
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(administrator);
 			for (final ObjectError e : binding.getAllErrors())
-				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
+				System.out.println(
+						e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
 				this.administratorservice.save(administrator);
@@ -132,7 +132,8 @@ public class AdministratorController extends AbstractController {
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(referee);
 			for (final ObjectError e : binding.getAllErrors())
-				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
+				System.out.println(
+						e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
 				this.administratorservice.saveReferee(referee);
@@ -236,7 +237,8 @@ public class AdministratorController extends AbstractController {
 		ratioOfRejectedApplications = this.applicationService.ratioOfRejectedApplications();
 		ratioOfRejectedApplicationsCantChange = this.applicationService.ratioOfRejectedApplicationsCantChange();
 		customersWith10PercentMoreAvgFixUpTask = this.customerService.customersWith10PercentMoreAvgFixUpTask();
-		handyWorkersWith10PercentMoreAvgApplicatios = this.handyWorkerService.handyWorkersWith10PercentMoreAvgApplicatios();
+		handyWorkersWith10PercentMoreAvgApplicatios = this.handyWorkerService
+				.handyWorkersWith10PercentMoreAvgApplicatios();
 
 		avgMinMaxStdvComplaintsPerFixUpTask = this.administratorservice.findAvgMinMaxStrDvtPerFixUpTask();
 		avgMinMaxStdvNotesPerReferee = this.noteService.computeAvgMinmaxStdvNotesPerReport();
@@ -279,19 +281,19 @@ public class AdministratorController extends AbstractController {
 	}
 
 	// List banned actors
-	@RequestMapping(value = "/listBanned", method = RequestMethod.GET)
-	public ModelAndView listBanned() {
-		ModelAndView res;
-		Collection<Actor> actors;
-
-		actors = this.actorService.findAllBannedActors();
-
-		res = new ModelAndView("administrator/listBanned");
-		res.addObject("bannedactors", actors);
-		res.addObject("requestURI", "administrator/listBanned.do");
-
-		return res;
-	}
+//	@RequestMapping(value = "/listBanned", method = RequestMethod.GET)
+//	public ModelAndView listBanned() {
+//		ModelAndView res;
+//		Collection<Actor> actors;
+//
+//		actors = this.actorService.findAllBannedActors();
+//
+//		res = new ModelAndView("administrator/listBanned");
+//		res.addObject("bannedactors", actors);
+//		res.addObject("requestURI", "administrator/listBanned.do");
+//
+//		return res;
+//	}
 
 	// Ban an actor
 	@RequestMapping(value = "/ban", method = RequestMethod.GET)

@@ -31,9 +31,9 @@
 		<put-attribute name="body" value="/views/phase/createPhase.jsp" />
 	</definition>
 	
-	<definition name="customer/phase/edit" extends="master.page">	
+	<definition name="phase/handyWorker/edit" extends="master.page">	
 		<put-attribute name="title" value="Edit" />
-		<put-attribute name="body" value="/views/customer/phase/edit.jsp" />
+		<put-attribute name="body" value="/views/phase/edit.jsp" />
 	</definition>
 
 </tiles-definitions>

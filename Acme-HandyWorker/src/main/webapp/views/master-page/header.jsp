@@ -29,6 +29,7 @@
 					<li><a href="category/list.do"><spring:message code="master.page.category.list" /></a></li>
 					<li><a href="configuration/view.do"><spring:message code="master.page.configuration.display" /></a></li>
 					<li><a href="administrator/dashboard.do"><spring:message code="master.page.dashboard" /></a></li>
+					
 				</ul>
 			</li>
 			<li><a class="fNiv"><spring:message code="master.page.register" /></a>
@@ -47,6 +48,7 @@
 					<li><a href="customer/viewProfile.do"><spring:message code="master.page.customer.view" /></a></li>
 					<li><a href="fixuptask/list.do"><spring:message code="fixuptask.list" /></a></li>
 					<li><a href="complaint/customer/list.do"><spring:message code="master.page.complaint.list" /></a></li>
+					<li><a href="application/list.do"><spring:message code="master.page.applications" /></a></li>
 				</ul>
 			</li>
 		</security:authorize>
@@ -58,6 +60,7 @@
 					<li><a href="handyWorker/viewProfile.do"><spring:message code="master.page.handyWorker.view" /></a></li>
 					<li><a href="fixuptask/list.do"><spring:message code="fixuptask.list" /></a></li>
 					<li><a href="fixuptask/filter.do"><spring:message code="master.page.handyWorker.filter" /></a></li>
+					<li><a href="application/list.do"><spring:message code="master.page.applications" /></a></li>
 				</ul>
 			</li>
 		</security:authorize>

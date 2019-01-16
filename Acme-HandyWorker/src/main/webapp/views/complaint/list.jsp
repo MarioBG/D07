@@ -32,7 +32,7 @@
 		title="${complaintDescription}"></display:column>
 	<display:column value="${row.attachments}" title="${complaintAttachments}"></display:column>
 	<display:column value="${row.selfAsigned}" title="${complaintSelfAsigned}"></display:column>
-	<display:column title="${fixUpTask}">${ complaintToTask[row.id].id }</display:column>
+	<display:column title="${fixUpTask}"><a href="fixuptask/edit.do?fixuptaskId=${complaintToTask[row.id].id}">${ complaintToTask[row.id].ticker }</a></display:column>
 
 </display:table>
 

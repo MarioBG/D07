@@ -29,7 +29,3 @@
 <input type="button" class="ui button" name="create"
 		value="<spring:message code="box.create" />"
 		onclick="javascript: relativeRedir('box/create.do');">
-		
-<input type="button" name="send" class="ui button"
- value="<spring:message code="message.send" />"
- onclick="javascript: relativeRedir('message/send.do');" />

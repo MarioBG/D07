@@ -32,13 +32,8 @@
 	</definition>
 	
 	<definition name="box/edit" extends="master.page">	
-		<put-attribute name="title" value="Editar caja" />
+		<put-attribute name="title" value="Edit box" />
 		<put-attribute name="body" value="/views/box/edit.jsp" />
-	</definition>
-	
-	<definition name="box/move" extends="master.page">	
-		<put-attribute name="title" value="Mover caja" />
-		<put-attribute name="body" value="/views/box/move.jsp" />
 	</definition>
 	
 </tiles-definitions>

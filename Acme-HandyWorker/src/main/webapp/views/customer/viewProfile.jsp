@@ -58,19 +58,26 @@
 			<td data-label="address">${actor.address}</td>
 		</tr>
 	</tbody>
-</table>
+
 
 <security:authorize access="hasRole('CUSTOMER')">
 <input type="button" name="save" class="ui button"
  value="<spring:message code="customer.modify" />"
  onclick="javascript: relativeRedir('customer/edit.do');" />
+ 
+ <a class="ui button" href="fixuptask/listCustomer.do?customerId=${actor.id}"><spring:message code="customer.fix"/></a>
+ 
 </security:authorize>
 
 <security:authorize access="hasRole('HANDYWORKER')">
+
+<a class="ui button" href="fixuptask/listCustomer.do?customerId=${actor.id}"><spring:message code="fixuptask.viewCustomer"/></a>
+
 <input type="button" name="back" class="ui button"
  value="<spring:message code="customer.back" />"
- onclick="javascript: relativeRedir('fixuptask/list.do');" />
+ onclick="javascript: relativeRedir('welcome/index.do');" />
 </security:authorize>
 
+</table>
 </body>
 </html>

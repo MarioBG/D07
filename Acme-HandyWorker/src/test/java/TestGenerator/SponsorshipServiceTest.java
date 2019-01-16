@@ -12,7 +12,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import services.CreditCardService;
 import services.SponsorService;
 import services.SponsorshipService;
 import services.TutorialService;
@@ -34,9 +33,6 @@ public class SponsorshipServiceTest extends AbstractTest {
 	@Autowired
 	private TutorialService		tutorialService;
 
-	@Autowired
-	private CreditCardService		creditCardService;
-	
 	@Autowired
 	private SponsorService		sponsorService;
 
@@ -63,14 +59,13 @@ public class SponsorshipServiceTest extends AbstractTest {
 		final Collection<Sponsor> sponsors = this.sponsorService.findAll();
 		this.authenticate(sponsors.iterator().next().getUserAccount().getUsername());
 		final Sponsorship s = new Sponsorship();
-		CreditCard c = new CreditCard();
+		final CreditCard c = new CreditCard();
 		c.setBrandName("VISA");
 		c.setCVV(123);
 		c.setExpirationMonth(10);
 		c.setExpirationYear(20);
 		c.setHolderName("Pepe Flores");
 		c.setNumber("4161991501387341");
-		c=creditCardService.save(c);
 		s.setBanner("http://www.imagen.com/this.png");
 		s.setCreditCard(c);
 		s.setLink("http://www.google.com");

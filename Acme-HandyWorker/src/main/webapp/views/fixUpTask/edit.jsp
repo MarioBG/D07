@@ -120,6 +120,12 @@
 			</form:select>
 			<form:errors path="warranty"/>
 		</div>
+
+	<jstl:if test="${canBeDeleted == true }">
+	<input type="submit" class="btn btn-warning" name="delete" value="<spring:message code="warranty.delete" />">
+ 	</jstl:if>
+	<input type="button" name="cancel" value="<spring:message code="warranty.cancel" />" onclick="javascript: relativeRedir('fixuptask/list.do')">
+	
 	</security:authorize>
 	
 	<form:hidden path="applications"/>
@@ -195,11 +201,7 @@
 
 	<br />
 	<br />
-	<input type="submit" class="ui button" name="save" value="<spring:message code="fixUpTask.save" />">
-	
-	<input type="submit" class="ui button" name="delete" value="<spring:message code="fixUpTask.delete" />">
-	
-	<input type="button" class="ui button" name="cancel" value="<spring:message code="fixUpTask.cancel" />" onclick="javascript: relativeRedir('fixuptask/list.do')">
+	<input type="submit" name="save" value="<spring:message code="fixUpTask.save" />">
 		
 </form:form>
 
@@ -227,12 +229,20 @@
 			
 			<div>
 				<label>${phase_startMoment}:</label>
-				<input type="text" name="startMoment" value="">
+				<input type="text" name="startMoment" value="" placeholder="yyyy-MM-dd HH:mm">
 			</div>
 			
 			<div>
 				<label>${phase_endMoment}:</label>
-				<input type="text" name="endMoment" value="">
+				<input type="text" name="endMoment" value="" placeholder="yyyy-MM-dd HH:mm">
+			</div>
+			
+			<div>
+				<a href="phase/handyworker/edit-async.do?phaseId=${row.id}">${categoryEdit}</a>
+			</div>
+			
+			<div>
+				<input type="submit" class="btn btn-warning" name="delete" value="<spring:message code="category.delete" />">
 			</div>
 		</div>
 		
@@ -305,7 +315,6 @@
 				<label>coment:</label>
 				<input type="text" name="coment" value="">
 			</div>
-			
 		</form>
 	</div>
 	<h2 style="display: none" id="accept-errors" class="error">${error}</h2>
