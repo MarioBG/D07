@@ -72,7 +72,7 @@
 				<version>2.1</version>
 				<configuration>
 					<server>tomcat-development-server</server>
-					<port>80</port>
+					<port>8080</port>
 					<path>/${project.artifactId}</path>
 				</configuration>
 			</plugin>
@@ -222,7 +222,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.45</version>
+			<version>5.1.26</version>
 		</dependency>
 
 		<!-- Hibernate -->

@@ -20,10 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import repositories.HandyWorkerRepository;
-import security.Authority;
-import security.LoginService;
-import security.UserAccount;
 import domain.Application;
 import domain.Box;
 import domain.Customer;
@@ -36,6 +32,10 @@ import domain.Phase;
 import domain.Report;
 import domain.SocialIdentity;
 import domain.Tutorial;
+import repositories.HandyWorkerRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 
 @Service
 @Transactional
@@ -43,30 +43,29 @@ import domain.Tutorial;
 public class HandyWorkerService {
 
 	@PersistenceContext
-	EntityManager					entitymanager;
+	EntityManager entitymanager;
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	private HandyWorkerRepository	handyWorkerRepository;
+	private HandyWorkerRepository handyWorkerRepository;
 
 	@Autowired
-	private CustomerService			customerService;
+	private CustomerService customerService;
 
 	@Autowired
-	private FixUpTaskService		fixUpTaskService;
+	private FixUpTaskService fixUpTaskService;
 
 	@Autowired
-	private ApplicationService		applicationService;
+	private ApplicationService applicationService;
 
 	@Autowired
-	private FinderService			finderService;
+	private FinderService finderService;
 
 	@Autowired
-	private ReportService			reportService;
+	private ReportService reportService;
 
 	@Autowired
-	private BoxServices				boxservices;
-
+	private BoxServices boxservices;
 
 	// Supporting services ----------------------------------------------------
 
@@ -114,14 +113,20 @@ public class HandyWorkerService {
 			// "handyWorker.notEqual.userAccount");
 			saved = this.handyWorkerRepository.findOne(handyWorker.getId());
 			Assert.notNull(saved, "handyWorker.not.null");
-			Assert.isTrue(saved.getUserAccount().getUsername().equals(handyWorker.getUserAccount().getUsername()), "handyWorker.notEqual.username");
-			Assert.isTrue(handyWorker.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "handyWorker.notEqual.password");
-			Assert.isTrue(handyWorker.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && handyWorker.isSuspicious() == saved.isSuspicious(), "handyWorker.notEqual.accountOrSuspicious");
+			Assert.isTrue(saved.getUserAccount().getUsername().equals(handyWorker.getUserAccount().getUsername()),
+					"handyWorker.notEqual.username");
+			Assert.isTrue(handyWorker.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()),
+					"handyWorker.notEqual.password");
+			Assert.isTrue(
+					handyWorker.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked()
+							&& handyWorker.isSuspicious() == saved.isSuspicious(),
+					"handyWorker.notEqual.accountOrSuspicious");
 			handyWorker.setFinder(saved.getFinder());
 
 		} else {
 			Assert.isTrue(handyWorker.isSuspicious() == false, "handyWorker.notSuspicious.false");
-			handyWorker.getUserAccount().setPassword(encoder.encodePassword(handyWorker.getUserAccount().getPassword(), null));
+			handyWorker.getUserAccount()
+					.setPassword(encoder.encodePassword(handyWorker.getUserAccount().getPassword(), null));
 			handyWorker.getUserAccount().setEnabled(true);
 			Collection<Message> messages = new LinkedList<>();
 			Box inbox = new Box();
@@ -147,7 +152,9 @@ public class HandyWorkerService {
 			boxes.add(this.boxservices.save(trashbox));
 			boxes.add(this.boxservices.save(spambox));
 			handyWorker.setBoxes(boxes);
-			handyWorker.setMake(handyWorker.getName() + (handyWorker.getMiddleName() == null ? " " + handyWorker.getMiddleName() : "") + " " + handyWorker.getSurname());
+			handyWorker.setMake(handyWorker.getName()
+					+ (handyWorker.getMiddleName() == null ? " " + handyWorker.getMiddleName() : "") + " "
+					+ handyWorker.getSurname());
 
 		}
 
@@ -268,13 +275,15 @@ public class HandyWorkerService {
 		Assert.notNull(fixUpTask, "fixUpTask.not.null");
 		final HandyWorker handyWorker = this.findByFixUpTask(fixUpTask);
 
-		if (this.exists(fixUpTask.getId()) && this.applicationService.findAcceptedHandyWorkerApplicationByFixUpTask(fixUpTask).getStatus().equals("ACCEPTED")) {
+		if (this.exists(fixUpTask.getId()) && this.applicationService
+				.findAcceptedHandyWorkerApplicationByFixUpTask(fixUpTask).getStatus().equals("ACCEPTED")) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
 			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");
 			saved = this.fixUpTaskService.findOne(fixUpTask.getId());
 			Assert.notNull(saved, "fixUpTask.not.null");
-			Assert.isTrue(handyWorker.getUserAccount().isAccountNonLocked() && !(handyWorker.isSuspicious()), "customer.notEqual.accountOrSuspicious");
+			Assert.isTrue(handyWorker.getUserAccount().isAccountNonLocked() && !(handyWorker.isSuspicious()),
+					"customer.notEqual.accountOrSuspicious");
 			if (!phases.isEmpty())
 				fixUpTask.getPhases().addAll(phases);
 			result = this.fixUpTaskService.save(fixUpTask);
@@ -297,11 +306,17 @@ public class HandyWorkerService {
 		authority = new Authority();
 		authority.setAuthority("HANDYWORKER");
 
-		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains(authority)
-			&& this.applicationService.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application)).contains(application)) {
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING")
+				&& userAccount.getAuthorities().contains(authority)
+				&& this.applicationService
+						.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application))
+						.contains(application)) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "customer.notLogged ");
-			Assert.isTrue(logedUserAccount.equals(this.customerService.findCustomerByApplication(application).getUserAccount()), "handyWorker.notEqual.userAccount");
+			Assert.isTrue(
+					logedUserAccount
+							.equals(this.customerService.findCustomerByApplication(application).getUserAccount()),
+					"handyWorker.notEqual.userAccount");
 			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
 				saved = this.applicationService.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
@@ -325,8 +340,10 @@ public class HandyWorkerService {
 		}
 	}
 
-	public List<FixUpTask> filter(String command, String startDate, String endDate, double maxPrice, double minPrice) throws ParseException {
-		if ((command == null || "".equals(command)) && (startDate == null || "".equals(startDate)) && (endDate == null || "".equals(endDate)) && maxPrice < 0 && minPrice < 0)
+	public List<FixUpTask> filter(String command, String startDate, String endDate, double maxPrice, double minPrice)
+			throws ParseException {
+		if ((command == null || "".equals(command)) && (startDate == null || "".equals(startDate))
+				&& (endDate == null || "".equals(endDate)) && maxPrice < 0 && minPrice < 0)
 			return Arrays.asList();
 
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -334,7 +351,8 @@ public class HandyWorkerService {
 		StringBuilder str = new StringBuilder("select c from FixUpTask c where 1 = 1 ");
 
 		if (command != null && !"".equals(command))
-			str.append(" or c.ticker like CONCAT('%',:command,'%') or c.description like CONCAT('%',:command,'%') or c.address like CONCAT('%',:command,'%')");
+			str.append(
+					" or c.ticker like CONCAT('%',:command,'%') or c.description like CONCAT('%',:command,'%') or c.address like CONCAT('%',:command,'%')");
 
 		if (startDate != null && !"".equals(startDate))
 			str.append(" or c.startDate > :startDate");
@@ -404,14 +422,12 @@ public class HandyWorkerService {
 		Assert.notNull(logedUserAccount, "handy.worker.notLogged");
 		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
 		final Customer customer = this.customerService.findByUserAccountId(e.getCustomer().getUserAccount().getId());
-		Assert.isTrue(this.customerService.findByHandyWorkerUserAccountId(handyWorker.getUserAccount().getId()).contains(customer));
+		Assert.isTrue(this.customerService.findByHandyWorkerUserAccountId(handyWorker.getUserAccount().getId())
+				.contains(customer));
 		final Collection<Endorsement> endorsements = handyWorker.getEndorsements();
 		endorsements.add(e);
 		handyWorker.setEndorsements(endorsements);
 		this.handyWorkerRepository.save(handyWorker);
 	}
 
-	public HandyWorker getHandyWorkerByCurriculumId(int curriculumId) {
-		return this.handyWorkerRepository.getHandyWorkerByCurriculumId(curriculumId);
-	}
 }
