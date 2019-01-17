@@ -95,6 +95,10 @@
 		<security:intercept-url pattern="/message/display.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/edit.do" access="isAuthenticated()" />
 		
+		<security:intercept-url pattern="/socialIdentity/list.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/socialIdentity/edit.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/socialIdentity/create.do" access="isAuthenticated()" />
+		
 		<security:intercept-url pattern="/referee/viewProfile.do" access="hasRole('REFEREE')" /> 
 		<security:intercept-url pattern="/referee/edit.do" access="hasRole('REFEREE')" />
 		

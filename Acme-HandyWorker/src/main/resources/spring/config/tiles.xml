@@ -39,6 +39,7 @@
 		<value>/views/phase/tiles.xml</value>
 		<value>/views/complaint/tiles.xml</value>
 		<value>/views/box/tiles.xml</value>
+		<value>/views/socialIdentity/tiles.xml</value>
 		
 		
 	</util:list>

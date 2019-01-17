@@ -29,8 +29,11 @@ public class SponsorService {
 	@Autowired
 	private SponsorRepository	sponsorRepository;
 
-
 	// Supporting services ----------------------------------------------------
+
+	@Autowired
+	private BoxServices			boxServices;
+
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -101,10 +104,10 @@ public class SponsorService {
 			spambox.setPredefined(true);
 			spambox.setMessages(messages);
 			Collection<Box> boxes = new LinkedList<Box>();
-			boxes.add(inbox);
-			boxes.add(outbox);
-			boxes.add(trashbox);
-			boxes.add(spambox);
+			boxes.add(this.boxServices.save(inbox));
+			boxes.add(this.boxServices.save(outbox));
+			boxes.add(this.boxServices.save(trashbox));
+			boxes.add(this.boxServices.save(spambox));
 			sponsor.setBoxes(boxes);
 
 		}

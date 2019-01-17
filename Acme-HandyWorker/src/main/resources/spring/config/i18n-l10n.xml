@@ -39,6 +39,7 @@
 		<value>/views/box/messages</value>
 		<value>/views/configuration/messages</value>
 		<value>/views/box/messages</value>
+		<value>/views/socialIdentity/messages</value>
 		
 		<value>/views/complaint/messages</value>
 	</util:list>
