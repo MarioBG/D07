@@ -30,7 +30,7 @@
 		${row.subject }
 	</display:column>
 	<display:column>
-		<a href="message/view.do?messageId=${row.id}">${viewMessage}</a>
+		<a href="message/display.do?messageId=${row.id}">${viewMessage}</a>
 	</display:column>
 	<display:column>
 		<a href="message/delete.do?messageId=${row.id}">${deleteMessage}</a>

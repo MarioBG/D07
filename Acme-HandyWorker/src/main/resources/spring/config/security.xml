@@ -90,9 +90,10 @@
 		
 		<security:intercept-url pattern="/message/send.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/list.do" access="isAuthenticated()" />
-		<security:intercept-url pattern="/message/edit.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/message/delete.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/move.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/display.do" access="isAuthenticated()" />
+		<security:intercept-url pattern="/message/edit.do" access="isAuthenticated()" />
 		
 		<security:intercept-url pattern="/referee/viewProfile.do" access="hasRole('REFEREE')" /> 
 		<security:intercept-url pattern="/referee/edit.do" access="hasRole('REFEREE')" />

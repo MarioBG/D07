@@ -33,3 +33,7 @@
 			<a href="message/display.do?messageId=${row.id}">${messageView}</a>
 	</display:column>
 </display:table>
+
+<jstl:if test="${not empty messageCode}">
+	<p class="error"><jstl:out value="${messageCode}"/></p>
+</jstl:if>

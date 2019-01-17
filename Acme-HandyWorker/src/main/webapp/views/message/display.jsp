@@ -15,15 +15,19 @@
 <spring:message code="message.recipients" var="recipients" />
 <spring:message code="message.sender" var="sender" />
 
-<display:column property="priority" title="${priority}" />
-<display:column property="subject" title="${subject}" />
-<display:column property="moment" titleKey="${moment}" />
-<display:column property="body" titleKey="${body}" />
-<display:column property="sender" titleKey="${sender}" />
-<display:column titleKey="${recipients }">
-		<jstl:forEach items="${recipients}" var="e">
-			${e.name}, ${e.middleName}, ${e.surname}
-		</jstl:forEach>
-	</display:column>
+<h3>${priority}</h3> <p>${messageObject.priority}</p>
+<h3>${subject}</h3> <p>${messageObject.subject}</p>
+<h3>${body}</h3> <p>${messageObject.body}</p>
+<h3>${sender}</h3> <p>${messageObject.sender.userAccount.username}</p>
+<h3>${recipients}</h3> <p>
+<jstl:forEach items="${messageObject.recipients}" var="e">
+	<p>
+		${e.userAccount.username}
+	</p>
+</jstl:forEach>
+</p>
+<input type="button" name="back" class="ui button"
+	value="<spring:message code="message.back" />"
+	onclick="javascript: relativeRedir('box/list.do');" />
 
 </html>

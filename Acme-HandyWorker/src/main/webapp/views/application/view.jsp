@@ -281,7 +281,6 @@ hr[id^="ez-insert-after-placeholder"] {margin-top: 0;}
 <body>
 
 <jsp:useBean id="now" class="java.util.Date"/>
-${application.fixUpTask.endDate.time }
 <fmt:parseNumber var="dateDifference"
    value="${(now.time - application.fixUpTask.endDate.time) / (1000*60*60*24) }"
    integerOnly="true" />

@@ -42,6 +42,24 @@ public class MessageController extends AbstractController {
 		super();
 	}
 
+	public ModelAndView createListModelAndView(String messageCode) {
+		ModelAndView result;
+		Actor actor;
+		UserAccount userAccount;
+		Collection<Message> messages;
+
+		userAccount = LoginService.getPrincipal();
+
+		actor = this.actorService.findByUserAccount(userAccount);
+		messages = this.messageService.findMessagesFromActor(actor);
+
+		result = new ModelAndView("message/list");
+		result.addObject("messages", messages);
+		result.addObject("messageCode", messageCode);
+
+		return result;
+	}
+
 	@RequestMapping(value = "/send", method = RequestMethod.GET)
 	public ModelAndView create() {
 		ModelAndView result;
@@ -89,15 +107,15 @@ public class MessageController extends AbstractController {
 		return result;
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
-	public ModelAndView delete(@Valid MessageForm messageForm, final BindingResult binding) {
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	public ModelAndView delete(@RequestParam int messageId) {
 		ModelAndView result;
 		try {
-			Message message = this.reconstruct(messageForm);
+			Message message = this.messageService.findOne(messageId);
 			this.messageService.removeMessage(message);
-			result = new ModelAndView("redirect:list.do");
+			result = new ModelAndView("redirect:/box/list.do");
 		} catch (final Throwable oops) {
-			result = this.createEditModelAndView(messageForm, "message.commit.error");
+			result = this.createListModelAndView("message.commit.error");
 		}
 
 		return result;

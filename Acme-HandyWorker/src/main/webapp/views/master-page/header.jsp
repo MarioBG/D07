@@ -114,7 +114,7 @@
 				</a>
 				<ul>
 					<li class="arrow"></li>
-					<li><a href="box/list.do"><spring:message code="master.page.boxes" /></a></li>
+					<li><a href="box/list.do?d-16544-p=1"><spring:message code="master.page.boxes" /></a></li>
 					<li><a href="message/send.do"><spring:message code="master.page.messages.send" /></a></li>
 				</ul>
 			</li>
