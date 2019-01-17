@@ -324,7 +324,7 @@ public class CustomerService {
 		return res;
 	}
 
-	public Complaint saveComplaint(final Complaint c) {
+	public Complaint saveComplaint(Complaint c, Customer cus) {
 		Complaint res;
 		UserAccount logedUserAccount;
 		Authority authority = new Authority();
@@ -333,6 +333,8 @@ public class CustomerService {
 		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
 		c.setTicker(this.tickerGenerator());
 		res = this.complaintService.save(c);
+		cus.getComplaints().add(res);
+		this.customerRepository.save(cus);
 		return res;
 	}
 

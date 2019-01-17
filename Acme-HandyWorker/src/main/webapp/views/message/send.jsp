@@ -15,23 +15,27 @@
 <spring:message code="message.saveStr" var="saveStr" />
 <spring:message code="message.destinations" var="destinations" />
 
-<form:form action="message/actor/send.do" modelAttribute="_message">
+<form:form action="message/edit.do" modelAttribute="messageForm">
 	<form:hidden path="id"/>
-	<form:hidden path="version"/>
-	<form:hidden path="moment"/>
 	
-	<div><input type="text" name="destinations" placeholder="${destinations}"></div>
-	
+	<h3>${destinations}</h3>
+	<div><form:select path="recipientIds" multiple="true">
+	  <jstl:forEach items="${allActors}" var="actor">
+	  	<form:option value="${actor.userAccount.id}">${actor.userAccount.username}</form:option>
+	  </jstl:forEach>
+	</form:select></div>
+	<form:errors cssClass="error" path="recipientIds"></form:errors>
+	<h3>${subject}</h3>
 	<div>
-		<form:input path="subject" placeholder="${subject }"/>
+		<form:input path="subject" placeholder="${subject}"/>
 		<form:errors cssClass="error" path="subject"></form:errors>
 	</div>
-	
+	<h3>${body}</h3>
 	<div>
 		<form:textarea path="body"/>
 		<form:errors cssClass="error" path="body"></form:errors>
 	</div>
-	
+	<h3>${priority}</h3>
 	<div>
 		<form:select path="priority">
 			<form:option value="NEUTRAL"></form:option>
@@ -41,5 +45,5 @@
 		<form:errors cssClass="error" path="priority"></form:errors>
 	</div>
 	
-	<input type="submit" name="save" value="${saveStr }">
+	<input type="submit" name="save" value="${saveStr}">
 </form:form>

@@ -322,7 +322,7 @@ ${application.fixUpTask.endDate.time }
 		<br />
 		
 		<b>${offeredPrice}:&nbsp;</b>
-		${application.offeredPrice * vatPercent / 100}&euro; (${vatPercent}%)
+		${application.offeredPrice + application.offeredPrice * vatPercent / 100}&euro; (${vatPercent}%)
 		<br />
 		
 		<b>${creditCard}:&nbsp;</b>

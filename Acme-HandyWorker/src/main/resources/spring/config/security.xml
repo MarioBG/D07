@@ -93,7 +93,6 @@
 		<security:intercept-url pattern="/message/edit.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/move.do" access="isAuthenticated()" />
 		<security:intercept-url pattern="/message/display.do" access="isAuthenticated()" />
-		<security:intercept-url pattern="/message/move.do" access="isAuthenticated()" />
 		
 		<security:intercept-url pattern="/referee/viewProfile.do" access="hasRole('REFEREE')" /> 
 		<security:intercept-url pattern="/referee/edit.do" access="hasRole('REFEREE')" />
@@ -108,6 +107,7 @@
 				
 		<security:intercept-url pattern="/box/list.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/box/display.do" access="isAuthenticated()" /> 
+		<security:intercept-url pattern="/box/delete.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/box/create.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/box/edit.do" access="isAuthenticated()" /> 
 		

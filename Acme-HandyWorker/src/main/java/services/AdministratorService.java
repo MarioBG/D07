@@ -95,7 +95,7 @@ public class AdministratorService {
 		Assert.notNull(message);
 
 		Actor self = this.actorservice.findSelf();
-		this.messageservice.sendMessage(this.actorservice.findAllUsername(self.getId()), message);
+		this.messageservice.sendMessage(this.actorservice.findAll(), message);
 	}
 
 	public Collection<Administrator> findAll() {

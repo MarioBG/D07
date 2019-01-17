@@ -56,7 +56,7 @@
 	<display:column property="publicationMoment" title="${publicationMoment}" />
 	<display:column property="description" title="${description}" />
 	<display:column property="address" title="${address}" />
-	<display:column value="${row.maxPrice * vatPercent / 100}&euro; (${vatPercent}%)" title="${maxPrice}" />
+	<display:column value="${row.maxPrice + row.maxPrice * vatPercent / 100}&euro; (${vatPercent}%)" title="${maxPrice}" />
 	<display:column property="startDate" title="${startDate}" />
 	<display:column property="endDate" title="${endDate}" />
 	

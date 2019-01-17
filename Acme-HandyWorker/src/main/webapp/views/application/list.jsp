@@ -65,7 +65,7 @@
 	
 	<display:column value="${row.applicationMoment}" title="${applicationApplicationMoment}"></display:column>
 	<display:column class="${style}" value="${row.status}" title="${applicationStatus}"></display:column>
-	<display:column value="${row.offeredPrice * vatPercent / 100}&euro; (${vatPercent}%)" title="${applicationOfferedPrice}"></display:column>
+	<display:column value="${row.offeredPrice + row.offeredPrice * vatPercent / 100}&euro; (${vatPercent}%)" title="${applicationOfferedPrice}"></display:column>
 	<display:column value="${row.creditCard.number}" title="${applicationCreditCard}"></display:column>
 	<display:column value="${row.fixUpTask.description}" title="${applicationFixUpTask}"></display:column>
 	<display:column title="${applicationHandyWorker}"><a href="handyWorker/viewProfile.do?handyWorkerId=${row.handyWorker.id}">${row.handyWorker.userAccount.username}</a></display:column>
@@ -75,9 +75,3 @@
 	</display:column>
 	
 </display:table>
-
-<security:authorize access="hasRole('HANDYWORKER')">
-<input type="button" class="ui button" name="create"
-	value="<spring:message code="application.create" />"
-	onclick="javascript: relativeRedir('application/handyWorker/create.do');">
-</security:authorize>

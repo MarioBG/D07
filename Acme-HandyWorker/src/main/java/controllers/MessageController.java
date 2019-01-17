@@ -1,6 +1,9 @@
+
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -8,19 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Actor;
-import domain.Box;
-import domain.Message;
 import security.LoginService;
 import security.UserAccount;
 import services.ActorService;
 import services.MessageService;
+import domain.Actor;
+import domain.Box;
+import domain.Message;
+import forms.MessageForm;
 
 @Controller
 @RequestMapping("/message")
@@ -28,10 +31,11 @@ public class MessageController extends AbstractController {
 
 	// Services
 	@Autowired
-	private ActorService actorService;
+	private ActorService	actorService;
 
 	@Autowired
-	private MessageService messageService;
+	private MessageService	messageService;
+
 
 	// Constructor
 	public MessageController() {
@@ -45,11 +49,11 @@ public class MessageController extends AbstractController {
 
 		message = this.messageService.create();
 
-		result = this.createEditModelAndView(message);
+		MessageForm messageForm = this.construct(message);
+		result = this.createEditModelAndView(messageForm);
 
 		return result;
 	}
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 		ModelAndView result;
@@ -69,30 +73,31 @@ public class MessageController extends AbstractController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(@Valid @ModelAttribute(value = "message") final Message message,
-			final BindingResult binding, @RequestParam(value = "usernames") Collection<String> usernames) {
+	public ModelAndView save(@Valid MessageForm messageForm, final BindingResult binding) {
 		ModelAndView result;
 		if (binding.hasErrors())
-			result = this.createEditModelAndView(message);
+			result = this.createEditModelAndView(messageForm);
 		else
 			try {
-				this.messageService.sendMessage(usernames, message);
+				Message message = this.reconstruct(messageForm);
+				this.messageService.sendMessage(message.getRecipients(), message);
 				result = new ModelAndView("redirect:list.do");
 			} catch (final Throwable oops) {
-				result = this.createEditModelAndView(message, "message.commit.error");
+				result = this.createEditModelAndView(messageForm, "message.commit.error");
 			}
 
 		return result;
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "delete")
-	public ModelAndView delete(final Message message, final BindingResult binding) {
+	public ModelAndView delete(@Valid MessageForm messageForm, final BindingResult binding) {
 		ModelAndView result;
 		try {
+			Message message = this.reconstruct(messageForm);
 			this.messageService.removeMessage(message);
 			result = new ModelAndView("redirect:list.do");
 		} catch (final Throwable oops) {
-			result = this.createEditModelAndView(message, "message.commit.error");
+			result = this.createEditModelAndView(messageForm, "message.commit.error");
 		}
 
 		return result;
@@ -140,23 +145,24 @@ public class MessageController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(final Message message) {
+	protected ModelAndView createEditModelAndView(final MessageForm messageForm) {
 		ModelAndView result;
 
-		result = this.createEditModelAndView(message, null);
+		result = this.createEditModelAndView(messageForm, null);
 
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(final Message message, final String messageCode) {
+	protected ModelAndView createEditModelAndView(final MessageForm messageForm, final String messageCode) {
 		ModelAndView result;
 
-		if (message.getId() != 0)
+		if (messageForm.getId() != 0)
 			result = new ModelAndView("message/edit");
 		else
 			result = new ModelAndView("message/send");
 
-		result.addObject("_message", message);
+		result.addObject("messageForm", messageForm);
+		result.addObject("allActors", this.actorService.findAll());
 		result.addObject("messageCode", messageCode);
 
 		return result;
@@ -178,5 +184,34 @@ public class MessageController extends AbstractController {
 		result.addObject("messageCode", messageCode);
 
 		return result;
+	}
+
+	private MessageForm construct(Message message) {
+		MessageForm ans = new MessageForm();
+		ans.setBody(message.getBody());
+		ans.setId(message.getId());
+		ans.setPriority(message.getPriority());
+		ans.setRecipientIds(new ArrayList<Integer>());
+		ans.setSubject(message.getSubject());
+		return ans;
+	}
+
+	private Message reconstruct(MessageForm messageForm) {
+		Message msg = new Message();
+		msg.setBody(messageForm.getBody());
+		msg.setId(messageForm.getId());
+		msg.setMoment(new Date(System.currentTimeMillis() - 1));
+		msg.setPriority(messageForm.getPriority());
+		ArrayList<Actor> recipients = new ArrayList<Actor>();
+		for (Integer id : messageForm.getRecipientIds())
+			recipients.add(this.actorService.findByUserAccountId(id));
+		msg.setRecipients(recipients);
+		msg.setSender(this.actorService.findByPrincipal());
+		msg.setSubject(messageForm.getSubject());
+		if (messageForm.getId() == 0)
+			msg.setVersion(0);
+		else
+			msg.setVersion(this.messageService.findOne(messageForm.getId()).getVersion());
+		return msg;
 	}
 }

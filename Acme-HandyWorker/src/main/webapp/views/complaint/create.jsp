@@ -19,13 +19,7 @@
 		<!-- Ticker -->
 		<form:hidden path="ticker" />
 		<!-- Moment -->
-		<p>
-		<form:label path="moment">
-			<spring:message code="complaint.moment" />
-		</form:label>
-		<form:input path="moment" />
-		<form:errors path="moment" />
-		</p>
+		<form:hidden path="moment"/>
 		<!-- Description -->
 		<p>
 		<form:label path="description">

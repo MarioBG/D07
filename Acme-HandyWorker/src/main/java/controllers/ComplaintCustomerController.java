@@ -95,7 +95,7 @@ public class ComplaintCustomerController extends AbstractController {
 				System.out.println(e.getObjectName() + " error [" + e.getDefaultMessage() + "] " + Arrays.toString(e.getCodes()));
 		} else
 			try {
-				this.customerService.saveComplaint(complaint);
+				this.customerService.saveComplaint(complaint, this.customerService.findByPrincipal());
 				result = new ModelAndView("redirect:list.do");
 			} catch (final Throwable oops) {
 				result = this.createEditModelAndView(complaint, "complaint.commit.error");

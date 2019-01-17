@@ -26,10 +26,9 @@
 
 <display:table pagesize="3" class="displaytag" keepStatus="true"
 	name="list" requestURI="/complaint/customer/list.do" id="row">
-	<display:column value="${row.ticker}" title="${comlaintTicker}"></display:column>
+	<display:column value="asdasd" title="${complaintTicker}"></display:column>
 	<display:column value="${row.moment}" title="${complaintMoment}"></display:column>
-	<display:column value="${row.description}"
-		title="${complaintDescription}"></display:column>
+	<display:column value="${row.description}" title="${complaintDescription}"/>
 	<display:column value="${row.attachments}" title="${complaintAttachments}"></display:column>
 	<display:column value="${row.selfAsigned}" title="${complaintSelfAsigned}"></display:column>
 	<display:column title="${fixUpTask}"><a href="fixuptask/edit.do?fixUpTaskId=${complaintToTask[row.id].id}">${ complaintToTask[row.id].ticker }</a></display:column>

@@ -14,11 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import domain.Actor;
-import domain.Configuration;
 import repositories.ActorRepository;
 import security.LoginService;
 import security.UserAccount;
+import domain.Actor;
+import domain.Box;
+import domain.Configuration;
 
 @Service
 @Transactional
@@ -27,11 +28,12 @@ public class ActorService {
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	private ActorRepository actorRepository;
+	private ActorRepository			actorRepository;
 	@Autowired
-	private ConfigurationService configurationService;
+	private ConfigurationService	configurationService;
 	@PersistenceContext
-	EntityManager manager;
+	EntityManager					manager;
+
 
 	// Supporting services ----------------------------------------------------
 
@@ -113,8 +115,7 @@ public class ActorService {
 		queryParam.deleteCharAt(0);
 		queryParam.deleteCharAt(queryParam.length() - 1);
 
-		final Query query = this.manager
-				.createQuery(String.format("select c from Actor c where c.userAccount.username in (%s)", queryParam));
+		final Query query = this.manager.createQuery(String.format("select c from Actor c where c.userAccount.username in (%s)", queryParam));
 
 		return query.getResultList();
 	}
@@ -135,8 +136,7 @@ public class ActorService {
 		Assert.notNull(handyWorker);
 		Assert.isTrue(handyWorker.getId() != 0);
 
-		final Query query = this.manager
-				.createQuery("select m.body from Actor c join c.boxes b join b.messages m where c.id = :id");
+		final Query query = this.manager.createQuery("select m.body from Actor c join c.boxes b join b.messages m where c.id = :id");
 		query.setParameter("id", handyWorker.getId());
 
 		final List<String> bodies = query.getResultList();
@@ -159,7 +159,14 @@ public class ActorService {
 	public Actor findByUserAccount(final UserAccount userAccount) {
 		Assert.notNull(userAccount);
 		Assert.isTrue(userAccount.getId() != 0);
-		final Actor res = this.actorRepository.findByUserAccountId(userAccount.getId());
+		Actor res = this.actorRepository.findByUserAccountId(userAccount.getId());
+		return res;
+	}
+
+	public Actor findByUserAccountId(final int userAccountId) {
+		Assert.isTrue(userAccountId != 0);
+		Actor res = this.actorRepository.findByUserAccountId(userAccountId);
+		Assert.notNull(res);
 		return res;
 	}
 
@@ -170,17 +177,17 @@ public class ActorService {
 
 	}
 
-//	public Collection<Actor> findAllUnbannedActors() {
-//		final Collection<Actor> res = this.actorRepository.findAllUnbannedActors();
-//		Assert.notNull(res);
-//		return res;
-//	}
-//
-//	public Collection<Actor> findAllBannedActors() {
-//		final Collection<Actor> res = this.actorRepository.findAllBannedActors();
-//		Assert.notNull(res);
-//		return res;
-//	}
+	//	public Collection<Actor> findAllUnbannedActors() {
+	//		final Collection<Actor> res = this.actorRepository.findAllUnbannedActors();
+	//		Assert.notNull(res);
+	//		return res;
+	//	}
+	//
+	//	public Collection<Actor> findAllBannedActors() {
+	//		final Collection<Actor> res = this.actorRepository.findAllBannedActors();
+	//		Assert.notNull(res);
+	//		return res;
+	//	}
 
 	public Actor ban(final int actorId) {
 		final Actor res = this.actorRepository.findOne(actorId);
@@ -209,6 +216,12 @@ public class ActorService {
 
 		return res;
 
+	}
+
+	public void removeBox(Actor principal, Box entity) {
+		Assert.isTrue(this.findByPrincipal().equals(principal));
+		principal.getBoxes().remove(entity);
+		this.actorRepository.save(principal);
 	}
 
 	// public Actor create() {

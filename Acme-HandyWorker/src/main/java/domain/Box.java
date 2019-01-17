@@ -4,16 +4,17 @@ package domain;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 public class Box extends DomainEntity {
 
-	private String name;
-	private Boolean predefined;
+	private String	name;
+	private Boolean	predefined;
+
 
 	@NotBlank
 	public String getName() {
@@ -32,11 +33,13 @@ public class Box extends DomainEntity {
 		this.predefined = predefined;
 	}
 
+
 	// Relationships ----------------------------------------------------------
 
-	private Collection<Message> messages;
+	private Collection<Message>	messages;
 
-	@OneToMany
+
+	@ManyToMany
 	public Collection<Message> getMessages() {
 		return this.messages;
 	}
@@ -45,7 +48,9 @@ public class Box extends DomainEntity {
 		this.messages = messages;
 	}
 
-	private Box parentBox;
+
+	private Box	parentBox;
+
 
 	@ManyToOne(optional = true)
 	public Box getParentBox() {
