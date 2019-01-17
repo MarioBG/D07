@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,10 +24,6 @@ public class ConfigurationController extends AbstractController {
 
 	@Autowired
 	ConfigurationService	configurationService;
-
-	@Autowired
-	Validator				validator;
-
 	@Autowired
 	AdministratorService	administratorService;
 
@@ -87,9 +81,8 @@ public class ConfigurationController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(@Valid final Configuration configuration, final BindingResult binding) {
 		ModelAndView result;
-		Errors errors = null;
-		this.validator.validate(configuration.getWelcomeMessage(), errors);
-		binding.addAllErrors(errors);
+		//		Errors errors = this.configurationService.validateMessage(configuration.getWelcomeMessage());
+		//		binding.addAllErrors(errors);
 		if (binding.hasErrors()) {
 			result = this.createEditModelAndView(configuration);
 			for (final ObjectError e : binding.getAllErrors())
